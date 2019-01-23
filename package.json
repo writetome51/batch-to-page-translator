@@ -1,0 +1,38 @@
+{
+  "name": "@writetome51/batch-paginator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/writetome51/batch-paginator.git"
+  },
+  "keywords": [
+    "array",
+    "data",
+    "display",
+    "paginator",
+    "pagination",
+    "typescript",
+    "class"
+  ],
+  "author": "Steve Thompson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/writetome51/batch-paginator/issues"
+  },
+  "homepage": "https://github.com/writetome51/batch-paginator#readme",
+  "devDependencies": {
+    "@writetome51/arrays-match": "~1.0.2",
+    "@writetome51/get-countup-countdown": "~1.0.1",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@writetome51/app-paginator": "~1.0.0",
+    "@writetome51/get-rounded-up-down": "~1.0.8"
+  }
+}
