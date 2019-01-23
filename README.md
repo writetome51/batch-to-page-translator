@@ -1,4 +1,4 @@
-# BatchPaginator
+# Batchinator
 
 A TypeScript/Javascript class for pagination in a real-world web app.
 
