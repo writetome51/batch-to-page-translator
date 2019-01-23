@@ -8,6 +8,8 @@ export declare class Batchinator extends BaseClass {
 	readonly totalBatches: number;
 	readonly totalPages: number;
 	currentBatchNumber: number;
+	totalDataCount: number;
+	pagesPerBatch: number;
 
 	private __pagesPerBatch;
 	private __totalDataCount;

@@ -32,7 +32,7 @@ export class Batchinator extends BaseClass {
 			['totalDataCount', 'pagesPerBatch'],
 			{
 				get_getterFunction: (property) => {
-					return () => this[`__${property}`]
+					return () => this[`__${property}`];
 				},
 				get_setterFunction: (property) => {
 					return (value) => {
