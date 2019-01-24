@@ -18,10 +18,12 @@ import { BaseClass } from '@writetome51/base-class';
 
 export declare class Batchinator extends BaseClass {
 
+	pagesPerBatch: number;
+	totalDataCount: number;
+	currentPageNumber: number;
+	readonly currentBatchNumber: number;
 	readonly totalBatches: number;
 	readonly totalPages: number;
-	currentPageNumber: number;
-	currentBatchNumber: number;
 
 	private __paginator;
 	private __pagesPerBatch;

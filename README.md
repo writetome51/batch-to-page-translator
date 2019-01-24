@@ -30,38 +30,18 @@ var BatchPaginator = require('@writetome51/batch-paginator').BatchPaginator;
 ## Constructor
 
 ```
-constructor(public paginator: AppPaginator)
+constructor(
+    private __paginator: { currentPageNumber: number, itemsPerPage: number }
+) 
 ```
 
 ## Properties
 ```
-data : any[] (read-writable) //  the array being paginated.
-
-itemsPerPage : integer  (read-writable)
-    // default is 25.
-
-currentPageNumber : integer (read-writable)
-    // Assigning this a value automatically causes this.currentPage to update.
-
-currentPage : any[] (read-only)
-    // all items to be shown on current page.
-
-totalPages : integer (read-only)
-
-protected  _currentPageNumber : integer (read-writable)
-    // available in case a subclass wants to use it.
-
 className : string (read-only)
 ```
 
 ## Methods
-```
-getPage(pageIndex) : any[]
-    // returns a 'page' of items copied from this.data.
-    // You may not need to use this method because you can
-    // simply get the value of this.currentPage instead.
-    
-
+``` 
 protected   _createGetterAndOrSetterForEach(
                   propertyNames: string[],
                   configuration: IGetterSetterConfiguration
@@ -104,32 +84,12 @@ protected   _runMethod_and_returnThis(
 ## Usage
 
 ```
-// Getting an instance:
-let paginator = new BatchPaginator(theData, itemsPerPage); 
 
-// Assigning it a new array:  
-paginator.data = [item1, item2, item3, ...]
-
-// Changing number of items per page:  
-paginator.itemsPerPage = 15;
-
-// Getting a page:
-let page = paginator.getPage(pageIndex);  // page indexes begin at 0.
-
-// Changing the current page, and then reading it:
-paginator.currentPageNumber += 1;
-let currentPage = paginator.currentPage; 
-
-// Getting the total number of pages:  
-let totalPages = paginator.totalPages;
-
-// Getting the current page number:  
-let currentPageNumber = paginator.currentPageNumber;
 ```
 
 ## Inheritance Chain
 
-BatchPaginator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
+Batchinator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
 
 
 ## License

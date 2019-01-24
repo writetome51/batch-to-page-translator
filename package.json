@@ -1,7 +1,7 @@
 {
   "name": "@writetome51/batchinator",
   "version": "1.0.0",
-  "description": "for paginating data batches that can only be saved in-memory one batch at-a-time",
+  "description": "For paginating data batches that can only be saved in-memory one batch at-a-time",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
