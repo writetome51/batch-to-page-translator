@@ -1,7 +1,7 @@
 {
-  "name": "@writetome51/batch-paginator",
+  "name": "@writetome51/batchinator",
   "version": "1.0.0",
-  "description": "",
+  "description": "for paginating data batches that can only be saved in-memory one batch at-a-time",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,12 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/writetome51/batch-paginator.git"
+    "url": "git+https://github.com/writetome51/batchinator.git"
   },
   "keywords": [
     "array",
-    "data",
     "display",
+    "data",
+    "app",
+    "batch",
     "paginator",
     "pagination",
     "typescript",
@@ -23,9 +25,9 @@
   "author": "Steve Thompson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/writetome51/batch-paginator/issues"
+    "url": "https://github.com/writetome51/batchinator/issues"
   },
-  "homepage": "https://github.com/writetome51/batch-paginator#readme",
+  "homepage": "https://github.com/writetome51/batchinator#readme",
   "devDependencies": {
     "@writetome51/arrays-match": "~1.0.2",
     "@writetome51/get-countup-countdown": "~1.0.1",
@@ -34,8 +36,8 @@
   "dependencies": {
     "@writetome51/app-paginator": "~1.0.0",
     "@writetome51/get-rounded-up-down": "~1.0.8",
-    "@writetome51/in-range",
-    "@writetome51/not"
+    "@writetome51/in-range": "~1.0.2",
+    "@writetome51/not": "~1.0.3",
     "basic-data-handling": "~1.0.13"
   }
 }

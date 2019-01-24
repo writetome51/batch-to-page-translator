@@ -1,6 +1,14 @@
 # Batchinator
 
-A TypeScript/Javascript class for pagination in a real-world web app.
+A TypeScript/JavaScript class for paginating data batches that can only be saved  
+in-memory one batch at-a-time, where each batch is taken from a much bigger data  
+set that can't be completely fetched all at once.  
+A single batch is measured by the number of pages it has.  
+If the user is clicking thru pagination controls and clicks to page 10, for instance,  
+it's this class' job to figure out which batch page 10 is in and tell this.paginator  
+what page to currently be showing.
+It's not this class' responsibility to actually fetch the data from a db,
+or assign the current batch to this.paginator.data.
 
 ## Installation
 
@@ -22,8 +30,7 @@ var BatchPaginator = require('@writetome51/batch-paginator').BatchPaginator;
 ## Constructor
 
 ```
-new BatchPaginator(data = [], itemsPerPage = 25)
-    // param 'data' is the array being paginated.
+constructor(public paginator: AppPaginator)
 ```
 
 ## Properties
@@ -122,7 +129,7 @@ let currentPageNumber = paginator.currentPageNumber;
 
 ## Inheritance Chain
 
-BatchPaginator<--[ArrayPaginator](https://github.com/writetome51/array-paginator#arraypaginator)<--[PublicArrayContainer](https://github.com/writetome51/public-array-container#publicarraycontainer)<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
+BatchPaginator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
 
 
 ## License
