@@ -1,47 +1,86 @@
 # Batchinator
 
-A TypeScript/JavaScript class for paginating data batches that can only be saved  
-in-memory one batch at-a-time, where each batch is taken from a much bigger data  
-set that can't be completely fetched all at once.  
+A TypeScript/JavaScript class intended to help a separate Paginator class paginate data  
+that can only be saved in-memory one batch at-a-time, where each batch is taken from a  
+much bigger data set that can't be completely fetched all at once.  
 A single batch is measured by the number of pages it has.  
-If the user is clicking thru pagination controls and clicks to page 10, for instance,  
-it's this class' job to figure out which batch page 10 is in and tell this.paginator  
-what page to currently be showing.
-It's not this class' responsibility to actually fetch the data from a db,
-or assign the current batch to this.paginator.data.
+A batch is also defined as the total data the Paginator can handle all at once.
+
+An example: if the user is clicking thru pagination controls and clicks to page 10,  
+it's this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
+batch to fetch, and tell the Paginator what page to show.
 
 ## Installation
 
 You must have npm installed first.  Then, in the command line:
 
 ```bash
-npm install @writetome51/batch-paginator
+npm install @writetome51/batchinator
 ```
 
 ## Loading
 
 ```
 // If using TypeScript:
-import { BatchPaginator } from '@writetome51/batch-paginator';
+import { Batchinator } from '@writetome51/batchinator';
 // If using ES5 JavaScript:
-var BatchPaginator = require('@writetome51/batch-paginator').BatchPaginator;
+var Batchinator = require('@writetome51/batchinator').Batchinator;
 ```   
 
 ## Constructor
 
 ```
-constructor(
-    private __paginator: { currentPageNumber: number, itemsPerPage: number }
-) 
+constructor()
 ```
 
 ## Properties
 ```
+// The first 3 properties must be set before doing anything else:
+
+totalDataCount: number;
+
+pagesPerBatch: number;
+    // default is 20.
+    
+itemsPerPage: number;
+
+currentBatchNumber: number (read-only);
+    // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
+    // Its initial value is 1.
+
+itemsPerBatch: number (read-only);
+
+totalBatches: number (read-only);
+
+totalPages: number (read-only);
+
 className : string (read-only)
+    // Not important.  Inherited from BaseClass.
 ```
 
 ## Methods
-``` 
+```
+set_currentBatchNumber_basedOnPage(pageNumber): void
+    // Figures out the batch number that contains pageNumber, and
+    // assigns it to this.currentBatchNumber .
+
+currentBatchContainsPage(pageNumber): boolean
+    // Useful if you need to find out if the batch containing pageNumber 
+    // is already the currently loaded batch.
+
+getBatchNumberContainingPage(pageNumber): number
+
+getCurrentPageNumberForPaginator(pageNumber): number
+    // We assume the Paginator doesn't know it's handling batches of a larger data set
+    // (that's why you're using this class —— it worries about that so Paginator doesnt have to), 
+    // so this function translates the passed pageNumber into a different number, 
+    // which it returns. This is the page number the Paginator needs to show.
+    // Example:  say this.pagesPerBatch is 10. Say the user requests page 11. That page would be 
+    // page 1 of batch 2.  You call this.set_currentBatchNumber_basedOnPage(11), fetch the 
+    // batch, assign it to the Paginator, and call this.getCurrentPageNumberForPaginator(11). 
+    // It will return 1. That's the page number Paginator must show.
+	
+
 protected   _createGetterAndOrSetterForEach(
                   propertyNames: string[],
                   configuration: IGetterSetterConfiguration
@@ -81,10 +120,58 @@ protected   _runMethod_and_returnThis(
 ) : this
 ```   
 
-## Usage
+## Usage Example
 
 ```
+export class PaginationDataController {
 
+    constructor(
+        private __batchinator: Batchinator,
+        private __paginator: { itemsPerPage: number, data: any[], currentPageNumber: number },
+        private __dataService: DataService // as of now, an imaginary interface
+    ) {
+        super();
+        // @ts-ignore
+        this.__batchinator.totalDataCount = this.__dataService.getTotalDataCount();
+        this.__batchinator.itemsPerPage = this.__paginator.itemsPerPage;
+        // @ts-ignore
+        this.__batchinator.pagesPerBatch = 20;
+
+        this.__loadBatchAndPage(1);
+	}
+
+
+	showPage(pageNumber) {
+		if (this.__batchinator.currentBatchContainsPage(pageNumber)) {
+			this.__showPageInCurrentBatch(pageNumber);
+		}
+		else this.__loadBatchAndPage(pageNumber);
+	}
+
+
+	private __showPageInCurrentBatch(pageNumber){
+		this.__paginator.currentPageNumber = 
+			this.__batchinator.getCurrentPageNumberForPaginator(pageNumber);
+	}
+
+
+	private __loadBatchAndPage(pageNumber){
+		this.__loadBatch(pageNumber));
+		this.__showPageInCurrentBatch(pageNumber);
+	}
+
+
+	private __loadBatch(pageNumber){
+		this.__batchinator.set_currentBatchNumber_basedOnPage(pageNumber);
+
+		this.__paginator.data = this.__dataService.getData(
+			this.__batchinator.currentBatchNumber,
+			this.__batchinator.itemsPerBatch
+		);
+	}
+
+
+}
 ```
 
 ## Inheritance Chain

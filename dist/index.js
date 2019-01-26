@@ -19,33 +19,31 @@ var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 var in_range_1 = require("@writetome51/in-range");
 var not_1 = require("@writetome51/not");
 /********************
- This class is for paginating data that can only be saved in-memory one batch
- at-a-time, where each batch is taken from a much bigger data set that can't be
- completely fetched all at once.
+ This class is intended to help a separate Paginator class paginate data that can only be saved
+ in-memory one batch at-a-time, where each batch is taken from a much bigger data set
+ that can't be completely fetched all at once.
  A single batch is measured by the number of pages it has.
+ A batch is also defined as the total data the Paginator can handle all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10,
- it's this class' job to figure out which batch page 10 is in and tell this.__paginator
- what page to currently be showing.
-
- It's not this class' responsibility to actually fetch the data from a db or file,
- or assign the current batch to this.__paginator .  It does not handle the data.
- Because of this, the same paginator instance in this.__paginator must also be
- manipulated elsewhere.
+ it's this class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
+ to fetch, and tell the Paginator what page to show.
  *******************/
 var Batchinator = /** @class */ (function (_super) {
     __extends(Batchinator, _super);
-    function Batchinator(__paginator) {
+    function Batchinator() {
         var _this = _super.call(this) || this;
-        _this.__paginator = __paginator;
-        // currentPageNumber: number;
-        // totalDataCount: number;
+        // The first 3 properties must be set before doing anything else:
+        // totalDataCount; 
         // pagesPerBatch = 20;
-        // currentBatchNumber: number (read-only);
-        // totalBatches : number (read-only)
-        // totalPages: number (read-only)
+        // itemsPerPage;  (the value should be gotten from the Paginator class)
+        // currentBatchNumber  (read-only);
+        // itemsPerBatch  (read-only);
+        // totalBatches  (read-only);
+        // totalPages  (read-only);
         _this.__pagesPerBatch = 20;
-        _this._createGetterAndOrSetterForEach(['totalDataCount', 'pagesPerBatch'], {
+        _this.__currentBatchNumber = 1;
+        _this._createGetterAndOrSetterForEach(['totalDataCount', 'pagesPerBatch', 'itemsPerPage'], {
             get_getterFunction: function (property) {
                 return function () {
                     if (_this["__" + property] === (null || undefined)) {
@@ -65,21 +63,6 @@ var Batchinator = /** @class */ (function (_super) {
         });
         return _this;
     }
-    Object.defineProperty(Batchinator.prototype, "currentPageNumber", {
-        get: function () {
-            return this.__currentPageNumber;
-        },
-        // The most important feature of this class.
-        // Setting it automatically updates this.currentBatchNumber to the batch that contains that page.
-        // Also updates this.__paginator.currentPageNumber so the correct page is displayed.
-        set: function (pageNumber) {
-            this.__set__currentBatchNumber(this.__getBatchNumberContainingPageNumber(pageNumber));
-            this.__currentPageNumber = pageNumber;
-            this.__paginator.currentPageNumber = this.__getTranslatedPageNumberForPaginator(pageNumber);
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Batchinator.prototype, "currentBatchNumber", {
         get: function () {
             return this.__currentBatchNumber;
@@ -98,29 +81,41 @@ var Batchinator = /** @class */ (function (_super) {
     Object.defineProperty(Batchinator.prototype, "totalPages", {
         get: function () {
             // @ts-ignore
-            return get_rounded_up_down_1.getRoundedUp(this.totalDataCount / this.__paginator.itemsPerPage);
+            return get_rounded_up_down_1.getRoundedUp(this.totalDataCount / this.itemsPerPage);
         },
         enumerable: true,
         configurable: true
     });
-    Batchinator.prototype.__set__currentBatchNumber = function (value) {
-        errorIfNotInteger_1.errorIfNotInteger(value);
-        if (not_1.not(in_range_1.inRange([1, this.totalBatches], value))) {
-            throw new Error("The property \"currentBatchNumber\" must be an integer from 1 to the value of \n\t\t\t\tthe \"totalBatches\" property.");
-        }
-        this.__currentBatchNumber = value;
+    Object.defineProperty(Batchinator.prototype, "itemsPerBatch", {
+        get: function () {
+            // @ts-ignore
+            return this.itemsPerPage * this.pagesPerBatch;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Batchinator.prototype.set_currentBatchNumber_basedOnPage = function (pageNumber) {
+        this.__currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
     };
-    Batchinator.prototype.__getBatchNumberContainingPageNumber = function (pageNumber) {
+    Batchinator.prototype.currentBatchContainsPage = function (pageNumber) {
+        var batchNumber = this.getBatchNumberContainingPage(pageNumber);
+        return (this.currentBatchNumber === batchNumber);
+    };
+    Batchinator.prototype.getBatchNumberContainingPage = function (pageNumber) {
         if (not_1.not(in_range_1.inRange([1, this.totalPages], pageNumber))) {
             throw new Error('The requested page does not exist.');
         }
         // @ts-ignore
         return get_rounded_up_down_1.getRoundedUp(pageNumber / this.pagesPerBatch);
     };
-    // Because this.__paginator is not designed for handling batches, we have to translate
-    // the requested pageNumber into a different number, which is then assigned to
-    // this.__paginator.currentPageNumber .
-    Batchinator.prototype.__getTranslatedPageNumberForPaginator = function (pageNumber) {
+    // Because the Paginator is not designed for handling batches (we assume), we have to translate
+    // the passed pageNumber into a different number, returned by this function, which is the page
+    // number the Paginator needs to show.
+    Batchinator.prototype.getCurrentPageNumberForPaginator = function (pageNumber) {
+        var batchNumber = this.getBatchNumberContainingPage(pageNumber);
+        if (this.currentBatchNumber !== batchNumber) {
+            throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. It must have the correct value before calling this\n\t\t\tfunction.");
+        }
         // @ts-ignore
         return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
     };
