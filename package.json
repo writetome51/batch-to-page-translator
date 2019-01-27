@@ -1,7 +1,7 @@
 {
   "name": "@writetome51/batchinator",
   "version": "1.0.0",
-  "description": "For paginating data batches that can only be saved in-memory one batch at-a-time",
+  "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be saved in-memory one batch at-a-time",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -34,10 +34,10 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "@writetome51/app-paginator": "~1.0.0",
+    "basic-data-handling": "~1.0.13",
+    "@writetome51/base-class": "~0.0.2",
     "@writetome51/get-rounded-up-down": "~1.0.8",
     "@writetome51/in-range": "~1.0.2",
-    "@writetome51/not": "~1.0.3",
-    "basic-data-handling": "~1.0.13"
+    "@writetome51/not": "~1.0.3"
   }
 }

@@ -7,13 +7,13 @@ import { not } from '@writetome51/not';
 
 /********************
  This class is intended to help a separate Paginator class paginate data that can only be saved
- in-memory one batch at-a-time, where each batch is taken from a much bigger data set
- that can't be completely fetched all at once.
+ in-memory one batch at-a-time, where each batch is taken from a much bigger data set that can't
+ be completely fetched all at once.
  A single batch is measured by the number of pages it has.
  A batch is also defined as the total data the Paginator can handle all at once.
 
- An example: if the user is clicking thru pagination controls and clicks to page 10,
- it's this class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
+ An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
+ class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
  to fetch, and tell the Paginator what page to show.
  *******************/
 
@@ -26,9 +26,10 @@ export class Batchinator extends BaseClass {
 	// itemsPerPage;  (the value should be gotten from the Paginator class)
 
 	// currentBatchNumber  (read-only);
-	// itemsPerBatch  (read-only);
 	// totalBatches  (read-only);
 	// totalPages  (read-only);
+	// itemsPerBatch  (read-only);
+
 
 	private __pagesPerBatch = 20;
 	private __totalDataCount: number;
@@ -113,7 +114,7 @@ export class Batchinator extends BaseClass {
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
 		if (this.currentBatchNumber !== batchNumber) {
 			throw new Error(`The property "currentBatchNumber" is not set to the batch number 
-			that contains the passed pageNumber. It must have the correct value before calling this
+			that contains the passed pageNumber. It must be before calling this
 			function.`);
 		}
 		// @ts-ignore
