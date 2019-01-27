@@ -6,8 +6,8 @@ much bigger data set that can't be completely fetched all at once.
 A single batch is measured by the number of pages it has.  
 A batch is also defined as the total data the Paginator can handle all at once.
 
-An example: if the user is clicking thru pagination controls and clicks to page 10,  
-it's this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
+An example: if the user is clicking thru pagination controls and clicks to page 10, it's  
+this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
 batch to fetch, and tell the Paginator what page to show.
 
 ## Installation
@@ -38,6 +38,7 @@ constructor()
 // The first 3 properties must be set before doing anything else:
 
 totalDataCount: number;
+    // number of items in entire data set.
 
 pagesPerBatch: number;
     // default is 20.
@@ -127,14 +128,13 @@ export class PaginationDataController {
 
     constructor(
         private __batchinator: Batchinator,
-        private __paginator: { itemsPerPage: number, data: any[], currentPageNumber: number },
+        private __paginator: { data: any[], itemsPerPage: number, currentPageNumber: number },
         private __dataService: DataService // as of now, an imaginary interface
-    ) {
-        super();
-        // @ts-ignore
+    ) { 
+        // Set properties 'totalDataCount', 'itemsPerPage', and 'pagesPerBatch' before doing 
+        // anything else with the batchinator:
         this.__batchinator.totalDataCount = this.__dataService.getTotalDataCount();
         this.__batchinator.itemsPerPage = this.__paginator.itemsPerPage;
-        // @ts-ignore
         this.__batchinator.pagesPerBatch = 20;
 
         this.__loadBatchAndPage(1);
@@ -156,12 +156,12 @@ export class PaginationDataController {
 
 
 	private __loadBatchAndPage(pageNumber){
-		this.__loadBatch(pageNumber));
+		this.__loadBatchContainingPage(pageNumber);
 		this.__showPageInCurrentBatch(pageNumber);
 	}
 
 
-	private __loadBatch(pageNumber){
+	private __loadBatchContainingPage(pageNumber){
 		this.__batchinator.set_currentBatchNumber_basedOnPage(pageNumber);
 
 		this.__paginator.data = this.__dataService.getData(
