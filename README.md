@@ -80,7 +80,10 @@ getCurrentPageNumberForPaginator(pageNumber): number
     // page 1 of batch 2.  You call this.set_currentBatchNumber_basedOnPage(11), fetch the 
     // batch, assign it to the Paginator, and call this.getCurrentPageNumberForPaginator(11). 
     // It will return 1. That's the page number Paginator must show.
-	
+```
+The methods below are not important to know about in order to use this  
+class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .
+```	
 
 protected   _createGetterAndOrSetterForEach(
                   propertyNames: string[],
@@ -138,37 +141,37 @@ export class PaginationDataController {
         this.__batchinator.pagesPerBatch = 20;
 
         this.__loadBatchAndPage(1);
-	}
+    }
 
 
-	showPage(pageNumber) {
-		if (this.__batchinator.currentBatchContainsPage(pageNumber)) {
-			this.__showPageInCurrentBatch(pageNumber);
-		}
-		else this.__loadBatchAndPage(pageNumber);
-	}
+    showPage(pageNumber) {
+        if (this.__batchinator.currentBatchContainsPage(pageNumber)) {
+            this.__showPageInCurrentBatch(pageNumber);
+        }
+        else this.__loadBatchAndPage(pageNumber);
+    }
 
 
-	private __showPageInCurrentBatch(pageNumber){
-		this.__paginator.currentPageNumber = 
-			this.__batchinator.getCurrentPageNumberForPaginator(pageNumber);
-	}
+    private __showPageInCurrentBatch(pageNumber){
+        this.__paginator.currentPageNumber = 
+            this.__batchinator.getCurrentPageNumberForPaginator(pageNumber);
+    }
 
 
-	private __loadBatchAndPage(pageNumber){
-		this.__loadBatchContainingPage(pageNumber);
-		this.__showPageInCurrentBatch(pageNumber);
-	}
+    private __loadBatchAndPage(pageNumber){
+        this.__loadBatchContainingPage(pageNumber);
+        this.__showPageInCurrentBatch(pageNumber);
+    }
 
 
-	private __loadBatchContainingPage(pageNumber){
-		this.__batchinator.set_currentBatchNumber_basedOnPage(pageNumber);
+    private __loadBatchContainingPage(pageNumber){
+        this.__batchinator.set_currentBatchNumber_basedOnPage(pageNumber);
 
-		this.__paginator.data = this.__dataService.getData(
-			this.__batchinator.currentBatchNumber,
-			this.__batchinator.itemsPerBatch
-		);
-	}
+        this.__paginator.data = this.__dataService.getData(
+            this.__batchinator.currentBatchNumber,
+            this.__batchinator.itemsPerBatch
+        );
+    }
 
 
 }
