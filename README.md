@@ -72,8 +72,7 @@ currentBatchContainsPage(pageNumber): boolean
 getBatchNumberContainingPage(pageNumber): number
 
 getCurrentPageNumberForPaginator(pageNumber): number
-    // We assume the Paginator doesn't know it's handling batches of a larger data set
-    // (that's why you're using this class —— it worries about that so Paginator doesnt have to), 
+    // We assume the Paginator doesn't know it's handling batches of a larger data set, 
     // so this function translates the passed pageNumber into a different number, 
     // which it returns. This is the page number the Paginator needs to show.
     // Example:  say this.pagesPerBatch is 10. Say the user requests page 11. That page would be 
