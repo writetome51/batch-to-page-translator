@@ -1,5 +1,5 @@
-import { AppPaginator } from '@writetome51/app-paginator';
 import {Batchinator} from '../index';
+import {arraysMatch} from '@writetome51/arrays-match';
 
 // Setup test data:
 let arr = [];
@@ -49,21 +49,104 @@ if (batchinator.totalPages === 17) console.log('test 6 passed');
 else console.log('test 6 FAILED');
 
 
-// Make sure currentBatchNumber is initialized at 1:
+// Test 7: Make sure currentBatchNumber is initialized at 1:
 if (batchinator.currentBatchNumber === 1) console.log('test 7 passed');
 else console.log('test 7 FAILED');
 
-// Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 8: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
 batchinator.set_currentBatchNumber_basedOnPage(8);
 if (batchinator.currentBatchNumber === 2) console.log('test 8 passed');
 else console.log('test 8 FAILED');
 
-// Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 9: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
 batchinator.set_currentBatchNumber_basedOnPage(14);
 if (batchinator.currentBatchNumber === 2) console.log('test 9 passed');
 else console.log('test 9 FAILED');
 
-// Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 10: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
 batchinator.set_currentBatchNumber_basedOnPage(15);
 if (batchinator.currentBatchNumber === 3) console.log('test 10 passed');
 else console.log('test 10 FAILED');
+
+// Test 11: Should trigger an error, because it requests a page that doesnt exist:
+let errorTriggered = false;
+try{
+	let batchNumber = batchinator.getBatchNumberContainingPage(18);
+}
+catch (e) {
+	errorTriggered = true;
+}
+if (errorTriggered) console.log('test 11 passed');
+else console.log('test 11 FAILED');
+
+
+// Test 12: make sure this.getBatchNumberContainingPage(page) returns correct batch numbers:
+let differentPages = [1,7,8,14,15,17];
+let expectedResults = [1,1,2,2,3,3];
+let results = [];
+differentPages.forEach((page)=>{
+	results.push(batchinator.getBatchNumberContainingPage(page));
+});
+if (arraysMatch(expectedResults, results)) console.log('test 12 passed');
+else console.log('test 12 FAILED');
+
+
+// Test 13: test this.getCurrentPageNumberForPaginator()
+differentPages = [1,7,8,14,15,17];
+expectedResults = [1,7,1,7,1,3];
+results = [];
+differentPages.forEach((page)=>{
+	batchinator.set_currentBatchNumber_basedOnPage(page);
+	results.push(batchinator.getCurrentPageNumberForPaginator(page));
+});
+if (arraysMatch(expectedResults, results)) console.log('test 13 passed');
+else console.log('test 13 FAILED');
+
+
+// Make sure errors are triggered when assigning properties illegal values:
+errorTriggered = false;
+try{
+	// @ts-ignore
+	let batchNumber = batchinator.totalDataCount = 1.5;
+}
+catch (e) {
+	errorTriggered = true;
+}
+if (errorTriggered) console.log('test 15 passed');
+else console.log('test 15 FAILED');
+
+
+errorTriggered = false;
+try{
+	// @ts-ignore
+	let batchNumber = batchinator.itemsPerPage = 0;
+}
+catch (e) {
+	errorTriggered = true;
+}
+if (errorTriggered) console.log('test 16 passed');
+else console.log('test 16 FAILED');
+
+
+errorTriggered = false;
+try{
+	// @ts-ignore
+	let batchNumber = batchinator.pagesPerBatch = '1';
+}
+catch (e) {
+	errorTriggered = true;
+}
+if (errorTriggered) console.log('test 17 passed');
+else console.log('test 17 FAILED');
+
+
+// Test 18
+// current batch number is 3.
+if (batchinator.currentBatchContainsPage(17)) console.log('test 18 passed');
+else console.log('test 18 FAILED');
+
+
+// Test 19
+// current batch number is 3.
+if (batchinator.currentBatchContainsPage(14)) console.log('test 19 FAILED');
+else console.log('test 19 passed');

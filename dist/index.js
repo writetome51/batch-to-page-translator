@@ -46,7 +46,7 @@ var Batchinator = /** @class */ (function (_super) {
         _this._createGetterAndOrSetterForEach(['totalDataCount', 'pagesPerBatch', 'itemsPerPage'], {
             get_getterFunction: function (property) {
                 return function () {
-                    if (_this["__" + property] === (null || undefined)) {
+                    if (_this["__" + property] === null || _this["__" + property] === undefined) {
                         throw new Error("The property \"" + property + "\" must be given a value first.");
                     }
                     return _this["__" + property];
@@ -114,7 +114,7 @@ var Batchinator = /** @class */ (function (_super) {
     Batchinator.prototype.getCurrentPageNumberForPaginator = function (pageNumber) {
         var batchNumber = this.getBatchNumberContainingPage(pageNumber);
         if (this.currentBatchNumber !== batchNumber) {
-            throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. It must be before calling this\n\t\t\tfunction.");
+            throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. Call this.set_currentBatchNumber_basedOnPage(pageNumber)\n\t\t\tbefore calling this function.");
         }
         // @ts-ignore
         return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));

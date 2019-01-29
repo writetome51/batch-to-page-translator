@@ -45,7 +45,7 @@ export class Batchinator extends BaseClass {
 			{
 				get_getterFunction: (property) => {
 					return () => {
-						if (this[`__${property}`] === (null || undefined)) {
+						if (this[`__${property}`] === null || this[`__${property}`] === undefined) {
 							throw new Error(`The property "${property}" must be given a value first.`);
 						}
 						return this[`__${property}`];
@@ -114,8 +114,8 @@ export class Batchinator extends BaseClass {
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
 		if (this.currentBatchNumber !== batchNumber) {
 			throw new Error(`The property "currentBatchNumber" is not set to the batch number 
-			that contains the passed pageNumber. It must be before calling this
-			function.`);
+			that contains the passed pageNumber. Call this.set_currentBatchNumber_basedOnPage(pageNumber)
+			before calling this function.`);
 		}
 		// @ts-ignore
 		return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
