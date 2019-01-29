@@ -1,4 +1,4 @@
-import {Batchinator} from '../index';
+import {Batchinator} from './index';
 import {arraysMatch} from '@writetome51/arrays-match';
 
 // Setup test data:

@@ -30,9 +30,7 @@
   "homepage": "https://github.com/writetome51/batchinator#readme",
   "devDependencies": {
     "@writetome51/arrays-match": "~1.0.2",
-    "@writetome51/get-countup-countdown": "~1.0.1",
-    "typescript": "^3.0.1",
-    "@writetome51/app-paginator": "~1.0.0"
+    "typescript": "^3.0.1"
   },
   "dependencies": {
     "basic-data-handling": "~1.0.13",
