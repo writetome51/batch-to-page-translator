@@ -1,19 +1,13 @@
 import {Batchinator} from './index';
 import {arraysMatch} from '@writetome51/arrays-match';
 
-// Setup test data:
-let arr = [];
-let i = 0;
-while (++i <= 50) {
-	arr.push(i);
-}
 
 // Setup batchinator:
 let batchinator = new Batchinator();
 // @ts-ignore
-batchinator.totalDataCount = arr.length; // 50 items
+batchinator.totalDataCount = 50;
 // @ts-ignore
-batchinator.pagesPerBatch = 5;
+batchinator.itemsPerBatch = 10;
 // @ts-ignore
 batchinator.itemsPerPage = 2;
 
@@ -21,8 +15,9 @@ batchinator.itemsPerPage = 2;
 if (batchinator.totalBatches === 5) console.log('test 1 passed');
 else console.log('test 1 FAILED');
 
-// Test 2: make sure 'itemsPerBatch' is accurate:
-if (batchinator.itemsPerBatch === 10) console.log('test 2 passed');
+// Test 2: make sure 'pagesPerBatch' is accurate:
+// @ts-ignore
+if (batchinator.pagesPerBatch === 5) console.log('test 2 passed');
 else console.log('test 2 FAILED');
 
 // Test 3: make sure 'totalPages' is accurate:
@@ -32,7 +27,7 @@ else console.log('test 3 FAILED');
 
 // Change values:
 // @ts-ignore
-batchinator.pagesPerBatch = 7;
+batchinator.itemsPerBatch = 21;
 // @ts-ignore
 batchinator.itemsPerPage = 3;
 
@@ -40,8 +35,8 @@ batchinator.itemsPerPage = 3;
 if (batchinator.totalBatches === 3) console.log('test 4 passed');
 else console.log('test 4 FAILED');
 
-// Test 5: make sure 'itemsPerBatch' is accurate:
-if (batchinator.itemsPerBatch === 21) console.log('test 5 passed');
+// Test 5: make sure 'pagesPerBatch' is accurate:
+if (batchinator.pagesPerBatch === 7) console.log('test 5 passed');
 else console.log('test 5 FAILED');
 
 // Test 6: make sure 'totalPages' is accurate:
@@ -131,7 +126,7 @@ else console.log('test 16 FAILED');
 errorTriggered = false;
 try{
 	// @ts-ignore
-	let batchNumber = batchinator.pagesPerBatch = '1';
+	let batchNumber = batchinator.itemsPerBatch = '1';
 }
 catch (e) {
 	errorTriggered = true;

@@ -22,8 +22,8 @@ var not_1 = require("@writetome51/not");
  This class is intended to help a separate Paginator class paginate data that can only be saved
  in-memory one batch at-a-time, where each batch is taken from a much bigger data set that can't
  be completely fetched all at once.
- A single batch is measured by the number of pages it has.
- A batch is also defined as the total data the Paginator can handle all at once.
+ A single batch is measured by the number of items it has.
+ A batch is also defined as the total number of items the Paginator can handle all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
  class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
@@ -33,17 +33,8 @@ var Batchinator = /** @class */ (function (_super) {
     __extends(Batchinator, _super);
     function Batchinator() {
         var _this = _super.call(this) || this;
-        // The first 3 properties must be set before doing anything else:
-        // totalDataCount; 
-        // pagesPerBatch = 20;
-        // itemsPerPage;  (the value should be gotten from the Paginator class)
-        // currentBatchNumber  (read-only);
-        // totalBatches  (read-only);
-        // totalPages  (read-only);
-        // itemsPerBatch  (read-only);
-        _this.__pagesPerBatch = 20;
         _this.__currentBatchNumber = 1;
-        _this._createGetterAndOrSetterForEach(['totalDataCount', 'pagesPerBatch', 'itemsPerPage'], {
+        _this._createGetterAndOrSetterForEach(['totalDataCount', 'itemsPerBatch', 'itemsPerPage'], {
             get_getterFunction: function (property) {
                 return function () {
                     if (_this["__" + property] === null || _this["__" + property] === undefined) {
@@ -86,10 +77,10 @@ var Batchinator = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Batchinator.prototype, "itemsPerBatch", {
+    Object.defineProperty(Batchinator.prototype, "pagesPerBatch", {
         get: function () {
             // @ts-ignore
-            return this.itemsPerPage * this.pagesPerBatch;
+            return get_rounded_up_down_1.getRoundedUp(this.itemsPerBatch / this.itemsPerPage);
         },
         enumerable: true,
         configurable: true

@@ -3,8 +3,8 @@
 A TypeScript/JavaScript class intended to help a separate Paginator class paginate data  
 that can only be saved in-memory one batch at-a-time, where each batch is taken from a  
 much bigger data set that can't be completely fetched all at once.  
-A single batch is measured by the number of pages it has.  
-A batch is also defined as the total data the Paginator can handle all at once.
+A single batch is measured by the number of items it has.  
+A batch is also defined as the total number of items the Paginator can handle all at once.
 
 An example: if the user is clicking thru pagination controls and clicks to page 10, it's  
 this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
@@ -40,8 +40,7 @@ constructor()
 totalDataCount: number;
     // number of items in entire data set.
 
-pagesPerBatch: number;
-    // default is 20.
+itemsPerBatch: number;
     
 itemsPerPage: number;
 
@@ -49,7 +48,7 @@ currentBatchNumber: number (read-only);
     // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
     // Its initial value is 1.
 
-itemsPerBatch: number (read-only);
+pagesPerBatch: number (read-only);
 
 totalBatches: number (read-only);
 
@@ -132,11 +131,11 @@ export class PaginationDataController {
         private __paginator: { data: any[], itemsPerPage: number, currentPageNumber: number },
         private __dataService: DataService // as of now, an imaginary interface
     ) { 
-        // Set properties 'totalDataCount', 'itemsPerPage', and 'pagesPerBatch' before doing 
+        // Set properties 'totalDataCount', 'itemsPerPage', and 'itemsPerBatch' before doing 
         // anything else with the batchinator:
         this.__batchinator.totalDataCount = this.__dataService.getTotalDataCount();
         this.__batchinator.itemsPerPage = this.__paginator.itemsPerPage;
-        this.__batchinator.pagesPerBatch = 20;
+        this.__batchinator.itemsPerBatch = 500;
 
         this.__loadBatchAndPage(1);
     }

@@ -2,18 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
 var arrays_match_1 = require("@writetome51/arrays-match");
-// Setup test data:
-var arr = [];
-var i = 0;
-while (++i <= 50) {
-    arr.push(i);
-}
 // Setup batchinator:
 var batchinator = new index_1.Batchinator();
 // @ts-ignore
-batchinator.totalDataCount = arr.length; // 50 items
+batchinator.totalDataCount = 50;
 // @ts-ignore
-batchinator.pagesPerBatch = 5;
+batchinator.itemsPerBatch = 10;
 // @ts-ignore
 batchinator.itemsPerPage = 2;
 // Test 1: make sure 'totalBatches' is accurate:
@@ -21,8 +15,9 @@ if (batchinator.totalBatches === 5)
     console.log('test 1 passed');
 else
     console.log('test 1 FAILED');
-// Test 2: make sure 'itemsPerBatch' is accurate:
-if (batchinator.itemsPerBatch === 10)
+// Test 2: make sure 'pagesPerBatch' is accurate:
+// @ts-ignore
+if (batchinator.pagesPerBatch === 5)
     console.log('test 2 passed');
 else
     console.log('test 2 FAILED');
@@ -33,7 +28,7 @@ else
     console.log('test 3 FAILED');
 // Change values:
 // @ts-ignore
-batchinator.pagesPerBatch = 7;
+batchinator.itemsPerBatch = 21;
 // @ts-ignore
 batchinator.itemsPerPage = 3;
 // Test 4: make sure 'totalBatches' is accurate:
@@ -41,8 +36,8 @@ if (batchinator.totalBatches === 3)
     console.log('test 4 passed');
 else
     console.log('test 4 FAILED');
-// Test 5: make sure 'itemsPerBatch' is accurate:
-if (batchinator.itemsPerBatch === 21)
+// Test 5: make sure 'pagesPerBatch' is accurate:
+if (batchinator.pagesPerBatch === 7)
     console.log('test 5 passed');
 else
     console.log('test 5 FAILED');
@@ -137,7 +132,7 @@ else
 errorTriggered = false;
 try {
     // @ts-ignore
-    var batchNumber = batchinator.pagesPerBatch = '1';
+    var batchNumber = batchinator.itemsPerBatch = '1';
 }
 catch (e) {
     errorTriggered = true;

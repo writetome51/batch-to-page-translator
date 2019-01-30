@@ -9,8 +9,8 @@ import { not } from '@writetome51/not';
  This class is intended to help a separate Paginator class paginate data that can only be saved
  in-memory one batch at-a-time, where each batch is taken from a much bigger data set that can't
  be completely fetched all at once.
- A single batch is measured by the number of pages it has.
- A batch is also defined as the total data the Paginator can handle all at once.
+ A single batch is measured by the number of items it has.
+ A batch is also defined as the total number of items the Paginator can handle all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
  class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
@@ -22,16 +22,16 @@ export class Batchinator extends BaseClass {
 
 	// The first 3 properties must be set before doing anything else:
 	// totalDataCount; 
-	// pagesPerBatch = 20;
-	// itemsPerPage;  (the value should be gotten from the Paginator class)
+	// itemsPerBatch;
+	// itemsPerPage; 
 
 	// currentBatchNumber  (read-only);
 	// totalBatches  (read-only);
 	// totalPages  (read-only);
-	// itemsPerBatch  (read-only);
+	// pagesPerBatch  (read-only);
+	
 
-
-	private __pagesPerBatch = 20;
+	private __itemsPerBatch: number;
 	private __totalDataCount: number;
 	private __currentBatchNumber = 1;
 	private __itemsPerPage: number;
@@ -41,7 +41,7 @@ export class Batchinator extends BaseClass {
 		super();
 
 		this._createGetterAndOrSetterForEach(
-			['totalDataCount', 'pagesPerBatch', 'itemsPerPage'],
+			['totalDataCount', 'itemsPerBatch', 'itemsPerPage'],
 			{
 				get_getterFunction: (property) => {
 					return () => {
@@ -80,9 +80,9 @@ export class Batchinator extends BaseClass {
 	}
 
 
-	get itemsPerBatch(): number {
+	get pagesPerBatch(): number {
 		// @ts-ignore
-		return this.itemsPerPage * this.pagesPerBatch;
+		return  getRoundedUp(this.itemsPerBatch / this.itemsPerPage);
 	}
 
 
