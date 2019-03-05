@@ -10,22 +10,7 @@ An example: if the user is clicking thru pagination controls and clicks to page 
 this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
 batch to fetch, and tell the Paginator what page to show.
 
-## Installation
 
-You must have npm installed first.  Then, in the command line:
-
-```bash
-npm install @writetome51/batchinator
-```
-
-## Loading
-
-```
-// If using TypeScript:
-import { Batchinator } from '@writetome51/batchinator';
-// If using ES5 JavaScript:
-var Batchinator = require('@writetome51/batchinator').Batchinator;
-```   
 
 ## Constructor
 
@@ -177,6 +162,23 @@ export class PaginationDataController {
 ## Inheritance Chain
 
 Batchinator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
+
+## Installation
+
+You must have npm installed first.  Then, in the command line:
+
+```bash
+npm install @writetome51/batchinator
+```
+
+## Loading
+
+```
+// If using TypeScript:
+import { Batchinator } from '@writetome51/batchinator';
+// If using ES5 JavaScript:
+var Batchinator = require('@writetome51/batchinator').Batchinator;
+```   
 
 
 ## License

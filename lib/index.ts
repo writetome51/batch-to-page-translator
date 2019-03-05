@@ -86,7 +86,7 @@ export class Batchinator extends BaseClass {
 	}
 
 
-	set_currentBatchNumber_basedOnPage(pageNumber) {
+	set_currentBatchNumber_basedOnPage(pageNumber): void {
 		this.__currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
 	}
 
