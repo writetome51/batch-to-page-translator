@@ -1,5 +1,5 @@
 import { BaseClass } from '@writetome51/base-class';
-import { errorIfNotInteger } from 'basic-data-handling/errorIfNotInteger';
+import { errorIfNotInteger } from 'error-if-not-integer';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
@@ -20,7 +20,7 @@ import { not } from '@writetome51/not';
 
 export class Batchinator extends BaseClass {
 
-	// The first 3 properties must be set before doing anything else:
+	// These first 3 properties must be set before doing anything else:
 	// totalDataCount; 
 	// itemsPerBatch;
 	// itemsPerPage; 
@@ -45,7 +45,7 @@ export class Batchinator extends BaseClass {
 			{
 				get_getterFunction: (property) => {
 					return () => {
-						if (this[`__${property}`] === null || this[`__${property}`] === undefined) {
+						if (this[`__${property}`] === undefined || this[`__${property}`] === null) {
 							throw new Error(`The property "${property}" must be given a value first.`);
 						}
 						return this[`__${property}`];

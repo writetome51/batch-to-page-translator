@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var base_class_1 = require("@writetome51/base-class");
-var errorIfNotInteger_1 = require("basic-data-handling/errorIfNotInteger");
+var error_if_not_integer_1 = require("error-if-not-integer");
 var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 var in_range_1 = require("@writetome51/in-range");
 var not_1 = require("@writetome51/not");
@@ -37,7 +37,7 @@ var Batchinator = /** @class */ (function (_super) {
         _this._createGetterAndOrSetterForEach(['totalDataCount', 'itemsPerBatch', 'itemsPerPage'], {
             get_getterFunction: function (property) {
                 return function () {
-                    if (_this["__" + property] === null || _this["__" + property] === undefined) {
+                    if (_this["__" + property] === undefined || _this["__" + property] === null) {
                         throw new Error("The property \"" + property + "\" must be given a value first.");
                     }
                     return _this["__" + property];
@@ -45,7 +45,7 @@ var Batchinator = /** @class */ (function (_super) {
             },
             get_setterFunction: function (property) {
                 return function (value) {
-                    errorIfNotInteger_1.errorIfNotInteger(value);
+                    error_if_not_integer_1.errorIfNotInteger(value);
                     if (value < 1)
                         throw new Error("The property \"" + property + "\" must be at least 1.");
                     _this["__" + property] = value;
