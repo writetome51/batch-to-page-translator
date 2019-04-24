@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "error-if-not-integer": "~1.0.0",
+    "error-if-not-integer-zero-or-greater": "~1.0.0",
     "@writetome51/base-class": "~0.0.3",
     "@writetome51/get-rounded-up-down": "~1.0.11",
     "@writetome51/in-range": "~1.0.4",

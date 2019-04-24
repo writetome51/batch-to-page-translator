@@ -22,15 +22,16 @@ itemsPerPage: number;
     // This must be set second.
 
 itemsPerBatch: number;
+    // Total number of items the Paginator can handle at once.
 
 currentBatchNumber: number (read-only);
     // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
 
-pagesPerBatch: number (read-only);
-
 totalBatches: number (read-only);
 
 totalPages: number (read-only);
+
+pagesPerBatch: number (read-only);
 
 className : string (read-only)
     // Not important.  Inherited from BaseClass.

@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var base_class_1 = require("@writetome51/base-class");
 var error_if_not_integer_1 = require("error-if-not-integer");
+var error_if_not_integer_zero_or_greater_1 = require("error-if-not-integer-zero-or-greater");
 var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 var in_range_1 = require("@writetome51/in-range");
 var not_1 = require("@writetome51/not");
@@ -30,17 +31,31 @@ var has_value_no_value_1 = require("@writetome51/has-value-no-value");
  *******************/
 var Batchinator = /** @class */ (function (_super) {
     __extends(Batchinator, _super);
-    function Batchinator() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function Batchinator(__dataSource) {
+        var _this = _super.call(this) || this;
+        _this.__dataSource = __dataSource;
+        return _this;
     }
-    Object.defineProperty(Batchinator.prototype, "totalItems", {
+    Object.defineProperty(Batchinator.prototype, "itemsPerBatch", {
         get: function () {
-            this.__errorIfPropertyHasNoValue('totalItems');
-            return this.__totalItems;
+            this.__errorIfPropertyHasNoValue('itemsPerBatch');
+            // This line is necessary because itemsPerBatch cannot be greater than totalItems, and
+            // totalItems can change at any time.
+            this.__ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal();
+            return this.__itemsPerBatch;
         },
         set: function (value) {
-            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'totalItems');
-            this.__totalItems = value;
+            error_if_not_integer_zero_or_greater_1.errorIfNotIntegerZeroOrGreater(value);
+            this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerBatch');
+            this.__itemsPerBatch = value;
+            // The user of this class may want itemsPerBatch kept at a certain default.  totalItems can
+            // change during runtime.  This is why we are adjusting itemsPerBatch if it is greater,
+            // rather than triggering error.
+            this.__ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal();
+            if (this.__itemsPerBatch > 5) {
+                while ((this.__itemsPerBatch % 5) !== 0)
+                    --this.__itemsPerBatch;
+            }
         },
         enumerable: true,
         configurable: true
@@ -51,30 +66,15 @@ var Batchinator = /** @class */ (function (_super) {
             return this.__itemsPerPage;
         },
         set: function (value) {
-            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'itemsPerPage');
-            if (value > this.totalItems) {
-                throw new Error("The property \"itemsPerPage\" cannot be a larger number than \"totalItems\"");
-            }
+            if (value > this.itemsPerBatch)
+                throw new Error("The property \"itemsPerPage\" cannot be \n\t\tgreater than \"itemsPerBatch\"");
+            this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerPage');
+            if (value > this.__dataSource.dataTotal)
+                value = this.__dataSource.dataTotal;
             this.__itemsPerPage = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Batchinator.prototype, "itemsPerBatch", {
-        get: function () {
-            this.__errorIfPropertyHasNoValue('itemsPerBatch');
-            this.__keep_itemsPerBatch_noGreaterThan_totalItems();
-            this.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is();
-            return this.__itemsPerBatch;
-        },
-        set: function (value) {
-            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'itemsPerBatch');
-            this.__itemsPerBatch = value;
-            if ((this.__itemsPerBatch % this.itemsPerPage) !== 0) {
-                throw new Error("The property \"itemsPerBatch\" must be evenly divisible by \"itemsPerPage\"");
+            if ((this.itemsPerBatch % this.__itemsPerPage) !== 0) {
+                throw new Error("The property \"itemsPerPage\" must be a number \"itemsPerBatch\" \n\t\t\tcan evenly divide itself into.");
             }
-            this.__keep_itemsPerBatch_noGreaterThan_totalItems();
-            this.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is();
         },
         enumerable: true,
         configurable: true
@@ -95,7 +95,7 @@ var Batchinator = /** @class */ (function (_super) {
     });
     Object.defineProperty(Batchinator.prototype, "totalPages", {
         get: function () {
-            return get_rounded_up_down_1.getRoundedUp(this.totalItems / this.itemsPerPage);
+            return get_rounded_up_down_1.getRoundedUp(this.__dataSource.dataTotal / this.itemsPerPage);
         },
         enumerable: true,
         configurable: true
@@ -130,9 +130,10 @@ var Batchinator = /** @class */ (function (_super) {
         }
         return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
     };
-    Batchinator.prototype.__keep_itemsPerBatch_noGreaterThan_totalItems = function () {
-        if (this.__itemsPerBatch > this.totalItems)
-            this.__itemsPerBatch = this.totalItems;
+    Batchinator.prototype.__ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal = function () {
+        if (this.__itemsPerBatch > this.__dataSource.dataTotal) {
+            this.__itemsPerBatch = this.__dataSource.dataTotal;
+        }
     };
     Batchinator.prototype.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is = function () {
         while ((this.__itemsPerBatch % this.itemsPerPage) !== 0) {
@@ -144,10 +145,14 @@ var Batchinator = /** @class */ (function (_super) {
             throw new Error("The property \"" + property + "\" must be given a value first.");
         }
     };
-    Batchinator.prototype.__errorIfValueForPropertyIsNotOneOrGreater = function (value, property) {
+    Batchinator.prototype.__errorIfValueIsNotOneOrGreater = function (value, property) {
         error_if_not_integer_1.errorIfNotInteger(value);
         if (value < 1)
             throw new Error("The property \"" + property + "\" must be at least 1.");
+    };
+    Batchinator.prototype.__errorIfNotEvenlyDivisibleByFive = function (value, property) {
+        if (value % 5 !== 0)
+            throw new Error("The property \"" + property + "\" must be a number \n\t\tevenly divisible by 5");
     };
     return Batchinator;
 }(base_class_1.BaseClass));

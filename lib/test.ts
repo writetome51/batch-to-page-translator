@@ -1,11 +1,10 @@
-import {Batchinator} from './index';
-import {arraysMatch} from '@writetome51/arrays-match';
+import { Batchinator } from './index';
+import { arraysMatch } from '@writetome51/arrays-match';
 
 
+let dataSource = {dataTotal: 50};
 // Setup batchinator:
-let batchinator = new Batchinator();
-// @ts-ignore
-batchinator.totalDataCount = 50;
+let batchinator = new Batchinator(dataSource);
 // @ts-ignore
 batchinator.itemsPerPage = 2;
 // @ts-ignore
@@ -66,10 +65,9 @@ else console.log('test 10 FAILED');
 
 // Test 11: Should trigger an error, because it requests a page that doesnt exist:
 let errorTriggered = false;
-try{
+try {
 	let batchNumber = batchinator.getBatchNumberContainingPage(18);
-}
-catch (e) {
+} catch (e) {
 	errorTriggered = true;
 }
 if (errorTriggered) console.log('test 11 passed');
@@ -77,10 +75,10 @@ else console.log('test 11 FAILED');
 
 
 // Test 12: make sure this.getBatchNumberContainingPage(page) returns correct batch numbers:
-let differentPages = [1,7,8,14,15,17];
-let expectedResults = [1,1,2,2,3,3];
+let differentPages = [1, 7, 8, 14, 15, 17];
+let expectedResults = [1, 1, 2, 2, 3, 3];
 let results = [];
-differentPages.forEach((page)=>{
+differentPages.forEach((page) => {
 	results.push(batchinator.getBatchNumberContainingPage(page));
 });
 if (arraysMatch(expectedResults, results)) console.log('test 12 passed');
@@ -88,10 +86,10 @@ else console.log('test 12 FAILED');
 
 
 // Test 13: test this.getCurrentPageNumberForPaginator()
-differentPages = [1,7,8,14,15,17];
-expectedResults = [1,7,1,7,1,3];
+differentPages = [1, 7, 8, 14, 15, 17];
+expectedResults = [1, 7, 1, 7, 1, 3];
 results = [];
-differentPages.forEach((page)=>{
+differentPages.forEach((page) => {
 	batchinator.set_currentBatchNumber_basedOnPage(page);
 	results.push(batchinator.getCurrentPageNumberForPaginator(page));
 });
@@ -101,11 +99,10 @@ else console.log('test 13 FAILED');
 
 // Make sure errors are triggered when assigning properties illegal values:
 errorTriggered = false;
-try{
+try {
 	// @ts-ignore
 	let batchNumber = batchinator.totalDataCount = 1.5;
-}
-catch (e) {
+} catch (e) {
 	errorTriggered = true;
 }
 if (errorTriggered) console.log('test 15 passed');
@@ -113,11 +110,10 @@ else console.log('test 15 FAILED');
 
 
 errorTriggered = false;
-try{
+try {
 	// @ts-ignore
 	let batchNumber = batchinator.itemsPerPage = 0;
-}
-catch (e) {
+} catch (e) {
 	errorTriggered = true;
 }
 if (errorTriggered) console.log('test 16 passed');
@@ -125,11 +121,10 @@ else console.log('test 16 FAILED');
 
 
 errorTriggered = false;
-try{
+try {
 	// @ts-ignore
 	let batchNumber = batchinator.itemsPerBatch = '1';
-}
-catch (e) {
+} catch (e) {
 	errorTriggered = true;
 }
 if (errorTriggered) console.log('test 17 passed');

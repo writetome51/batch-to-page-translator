@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
 var arrays_match_1 = require("@writetome51/arrays-match");
+var dataSource = { dataTotal: 50 };
 // Setup batchinator:
-var batchinator = new index_1.Batchinator();
-// @ts-ignore
-batchinator.totalDataCount = 50;
+var batchinator = new index_1.Batchinator(dataSource);
 // @ts-ignore
 batchinator.itemsPerPage = 2;
 // @ts-ignore
