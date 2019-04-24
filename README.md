@@ -2,36 +2,29 @@
 
 A TypeScript/JavaScript class intended to help a separate Paginator class paginate data  
 that can only be saved in-memory one batch at-a-time, where each batch is taken from a  
-much bigger data set that can't be completely fetched all at once.  
-A single batch is measured by the number of items it has.  
-A batch is also defined as the total number of items the Paginator can handle all at once.
+much bigger data set that can't be completely fetched all at once.   
+A batch is defined as the total number of items the Paginator can handle at once.
 
 An example: if the user is clicking thru pagination controls and clicks to page 10, it's  
 this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
 batch to fetch, and tell the Paginator what page to show.
 
 
-
-## Constructor
-
-```
-constructor()
-```
-
 ## Properties
 ```
 // The first 3 properties must be set before doing anything else:
 
-totalDataCount: number;
+totalItems: number;
     // number of items in entire data set.
+    // This must be set first.
+
+itemsPerPage: number;
+    // This must be set second.
 
 itemsPerBatch: number;
-    
-itemsPerPage: number;
 
 currentBatchNumber: number (read-only);
     // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
-    // Its initial value is 1.
 
 pagesPerBatch: number (read-only);
 
@@ -116,9 +109,9 @@ export class PaginationDataController {
         private __paginator: { data: any[], itemsPerPage: number, currentPageNumber: number },
         private __dataService: DataService // as of now, an imaginary interface
     ) { 
-        // Set properties 'totalDataCount', 'itemsPerPage', and 'itemsPerBatch' before doing 
+        // Set properties 'totalItems', 'itemsPerPage', and 'itemsPerBatch' before doing 
         // anything else with the batchinator:
-        this.__batchinator.totalDataCount = this.__dataService.getTotalDataCount();
+        this.__batchinator.totalItems = this.__dataService.getTotalDataCount();
         this.__batchinator.itemsPerPage = this.__paginator.itemsPerPage;
         this.__batchinator.itemsPerBatch = 500;
 

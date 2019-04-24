@@ -18,12 +18,11 @@ var error_if_not_integer_1 = require("error-if-not-integer");
 var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 var in_range_1 = require("@writetome51/in-range");
 var not_1 = require("@writetome51/not");
+var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 /********************
  This class is intended to help a separate Paginator class paginate data that can only be saved
  in-memory one batch at-a-time, where each batch is taken from a much bigger data set that can't
  be completely fetched all at once.
- A single batch is measured by the number of items it has.
- A batch is also defined as the total number of items the Paginator can handle all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
  class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
@@ -32,28 +31,54 @@ var not_1 = require("@writetome51/not");
 var Batchinator = /** @class */ (function (_super) {
     __extends(Batchinator, _super);
     function Batchinator() {
-        var _this = _super.call(this) || this;
-        _this.__currentBatchNumber = 1;
-        _this._createGetterAndOrSetterForEach(['totalDataCount', 'itemsPerBatch', 'itemsPerPage'], {
-            get_getterFunction: function (property) {
-                return function () {
-                    if (_this["__" + property] === undefined || _this["__" + property] === null) {
-                        throw new Error("The property \"" + property + "\" must be given a value first.");
-                    }
-                    return _this["__" + property];
-                };
-            },
-            get_setterFunction: function (property) {
-                return function (value) {
-                    error_if_not_integer_1.errorIfNotInteger(value);
-                    if (value < 1)
-                        throw new Error("The property \"" + property + "\" must be at least 1.");
-                    _this["__" + property] = value;
-                };
-            }
-        });
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
+    Object.defineProperty(Batchinator.prototype, "totalItems", {
+        get: function () {
+            this.__errorIfPropertyHasNoValue('totalItems');
+            return this.__totalItems;
+        },
+        set: function (value) {
+            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'totalItems');
+            this.__totalItems = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Batchinator.prototype, "itemsPerPage", {
+        get: function () {
+            this.__errorIfPropertyHasNoValue('itemsPerPage');
+            return this.__itemsPerPage;
+        },
+        set: function (value) {
+            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'itemsPerPage');
+            if (value > this.totalItems) {
+                throw new Error("The property \"itemsPerPage\" cannot be a larger number than \"totalItems\"");
+            }
+            this.__itemsPerPage = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Batchinator.prototype, "itemsPerBatch", {
+        get: function () {
+            this.__errorIfPropertyHasNoValue('itemsPerBatch');
+            this.__keep_itemsPerBatch_noGreaterThan_totalItems();
+            this.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is();
+            return this.__itemsPerBatch;
+        },
+        set: function (value) {
+            this.__errorIfValueForPropertyIsNotOneOrGreater(value, 'itemsPerBatch');
+            this.__itemsPerBatch = value;
+            if ((this.__itemsPerBatch % this.itemsPerPage) !== 0) {
+                throw new Error("The property \"itemsPerBatch\" must be evenly divisible by \"itemsPerPage\"");
+            }
+            this.__keep_itemsPerBatch_noGreaterThan_totalItems();
+            this.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is();
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Batchinator.prototype, "currentBatchNumber", {
         get: function () {
             return this.__currentBatchNumber;
@@ -63,7 +88,6 @@ var Batchinator = /** @class */ (function (_super) {
     });
     Object.defineProperty(Batchinator.prototype, "totalBatches", {
         get: function () {
-            // @ts-ignore
             return get_rounded_up_down_1.getRoundedUp(this.totalPages / this.pagesPerBatch);
         },
         enumerable: true,
@@ -71,15 +95,13 @@ var Batchinator = /** @class */ (function (_super) {
     });
     Object.defineProperty(Batchinator.prototype, "totalPages", {
         get: function () {
-            // @ts-ignore
-            return get_rounded_up_down_1.getRoundedUp(this.totalDataCount / this.itemsPerPage);
+            return get_rounded_up_down_1.getRoundedUp(this.totalItems / this.itemsPerPage);
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Batchinator.prototype, "pagesPerBatch", {
         get: function () {
-            // @ts-ignore
             return get_rounded_up_down_1.getRoundedUp(this.itemsPerBatch / this.itemsPerPage);
         },
         enumerable: true,
@@ -96,7 +118,6 @@ var Batchinator = /** @class */ (function (_super) {
         if (not_1.not(in_range_1.inRange([1, this.totalPages], pageNumber))) {
             throw new Error('The requested page does not exist.');
         }
-        // @ts-ignore
         return get_rounded_up_down_1.getRoundedUp(pageNumber / this.pagesPerBatch);
     };
     // Because the Paginator is not designed for handling batches (we assume), we have to translate
@@ -107,8 +128,26 @@ var Batchinator = /** @class */ (function (_super) {
         if (this.currentBatchNumber !== batchNumber) {
             throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. Call this.set_currentBatchNumber_basedOnPage(pageNumber)\n\t\t\tbefore calling this function.");
         }
-        // @ts-ignore
         return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
+    };
+    Batchinator.prototype.__keep_itemsPerBatch_noGreaterThan_totalItems = function () {
+        if (this.__itemsPerBatch > this.totalItems)
+            this.__itemsPerBatch = this.totalItems;
+    };
+    Batchinator.prototype.__ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is = function () {
+        while ((this.__itemsPerBatch % this.itemsPerPage) !== 0) {
+            --this.__itemsPerBatch;
+        }
+    };
+    Batchinator.prototype.__errorIfPropertyHasNoValue = function (property) {
+        if (has_value_no_value_1.noValue(this["__" + property])) {
+            throw new Error("The property \"" + property + "\" must be given a value first.");
+        }
+    };
+    Batchinator.prototype.__errorIfValueForPropertyIsNotOneOrGreater = function (value, property) {
+        error_if_not_integer_1.errorIfNotInteger(value);
+        if (value < 1)
+            throw new Error("The property \"" + property + "\" must be at least 1.");
     };
     return Batchinator;
 }(base_class_1.BaseClass));

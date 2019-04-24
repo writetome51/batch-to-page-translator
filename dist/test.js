@@ -7,9 +7,9 @@ var batchinator = new index_1.Batchinator();
 // @ts-ignore
 batchinator.totalDataCount = 50;
 // @ts-ignore
-batchinator.itemsPerBatch = 10;
-// @ts-ignore
 batchinator.itemsPerPage = 2;
+// @ts-ignore
+batchinator.itemsPerBatch = 10;
 // Test 1: make sure 'totalBatches' is accurate:
 if (batchinator.totalBatches === 5)
     console.log('test 1 passed');
@@ -28,9 +28,9 @@ else
     console.log('test 3 FAILED');
 // Change values:
 // @ts-ignore
-batchinator.itemsPerBatch = 21;
-// @ts-ignore
 batchinator.itemsPerPage = 3;
+// @ts-ignore
+batchinator.itemsPerBatch = 21;
 // Test 4: make sure 'totalBatches' is accurate:
 if (batchinator.totalBatches === 3)
     console.log('test 4 passed');
@@ -153,3 +153,11 @@ if (batchinator.currentBatchContainsPage(14))
     console.log('test 19 FAILED');
 else
     console.log('test 19 passed');
+// @ts-ignore
+batchinator.totalDataCount = 20;
+// @ts-ignore
+batchinator.itemsPerPage = 25;
+// @ts-ignore
+batchinator.itemsPerBatch = 25;
+// @ts-ignore
+console.log(batchinator.itemsPerBatch);
