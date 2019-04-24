@@ -6,9 +6,9 @@ var dataSource = { dataTotal: 50 };
 // Setup batchinator:
 var batchinator = new index_1.Batchinator(dataSource);
 // @ts-ignore
-batchinator.itemsPerPage = 2;
+batchinator.itemsPerBatch = 100;
 // @ts-ignore
-batchinator.itemsPerBatch = 10;
+batchinator.itemsPerPage = 5;
 // Test 1: make sure 'totalBatches' is accurate:
 if (batchinator.totalBatches === 5)
     console.log('test 1 passed');

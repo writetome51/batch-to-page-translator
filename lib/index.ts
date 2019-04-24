@@ -13,8 +13,7 @@ import { noValue } from '@writetome51/has-value-no-value';
  be completely fetched all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
- class' job to figure out which batch page 10 is in, tell the data-fetching tool what batch
- to fetch, and tell the Paginator what page to show.
+ class' job to figure out which batch page 10 is in and tell the Paginator what page to show.
  *******************/
 
 
@@ -48,40 +47,32 @@ export class Batchinator extends BaseClass {
 
 
 	set itemsPerBatch(value) {
-		errorIfNotIntegerZeroOrGreater(value);
+		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerBatch');
 		this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerBatch');
-		this.__itemsPerBatch = value;
 
-		// The user of this class may want itemsPerBatch kept at a certain default.  totalItems can
-		// change during runtime.  This is why we are adjusting itemsPerBatch if it is greater,
-		// rather than triggering error.
-		this.__ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal();
-		if (this.__itemsPerBatch > 5) {
-			while ((this.__itemsPerBatch % 5) !== 0) --this.__itemsPerBatch;
-		}
+		this.__itemsPerBatch = value;
 	}
 
 
 	get itemsPerBatch(): number {
 		this.__errorIfPropertyHasNoValue('itemsPerBatch');
-
-		// This line is necessary because itemsPerBatch cannot be greater than totalItems, and
-		// totalItems can change at any time.
-		this.__ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal();
 		return this.__itemsPerBatch;
 	}
 
 
+	// if this.itemsPerBatch / this.itemsPerPage does not divide evenly, Batchinator decrements
+	// this.itemsPerBatch until they do.
+
 	set itemsPerPage(value) {
-		if (value > this.itemsPerBatch) throw new Error(`The property "itemsPerPage" cannot be 
-		greater than "itemsPerBatch"`);
+		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerPage');
 		this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerPage');
-		if (value > this.__dataSource.dataTotal) value = this.__dataSource.dataTotal;
+
+		if (value > this.itemsPerBatch) throw new Error(  // makes sure this.itemsPerBatch is set first.
+			`The property "itemsPerPage" cannot be greater than "itemsPerBatch"`
+		);
+
 		this.__itemsPerPage = value;
-		if ((this.itemsPerBatch % this.__itemsPerPage) !== 0) {
-			throw new Error(`The property "itemsPerPage" must be a number "itemsPerBatch" 
-			can evenly divide itself into.`);
-		}
+		while ((this.__itemsPerBatch % this.__itemsPerPage) !== 0) this.__itemsPerBatch -= 5;
 	}
 
 
@@ -107,7 +98,8 @@ export class Batchinator extends BaseClass {
 
 
 	get pagesPerBatch(): number {
-		return getRoundedUp(this.itemsPerBatch / this.itemsPerPage);
+		// Should not have to be rounded.  They will divide evenly.
+		return (this.itemsPerBatch / this.itemsPerPage);
 	}
 
 
@@ -145,20 +137,6 @@ export class Batchinator extends BaseClass {
 	}
 
 
-	private __ifGreaterThan_dataTotal_set_itemsPerBatch_to_dataTotal(): void {
-		if (this.__itemsPerBatch > this.__dataSource.dataTotal) {
-			this.__itemsPerBatch = this.__dataSource.dataTotal;
-		}
-	}
-
-
-	private __ifNotEvenlyDivisibleBy_itemsPerPage_decrement_itemsPerBatch_until_it_is(): void {
-		while ((this.__itemsPerBatch % this.itemsPerPage) !== 0) {
-			--this.__itemsPerBatch;
-		}
-	}
-
-
 	private __errorIfPropertyHasNoValue(property): void {
 		if (noValue(this[`__${property}`])) {
 			throw new Error(`The property "${property}" must be given a value first.`);
@@ -173,8 +151,9 @@ export class Batchinator extends BaseClass {
 
 
 	private __errorIfNotEvenlyDivisibleByFive(value, property): void {
-		if (value % 5 !== 0) throw new Error(`The property "${property}" must be a number 
-		evenly divisible by 5`);
+		if (value % 5 !== 0) throw new Error(
+			`The property "${property}" must be a number evenly divisible by 5`
+		);
 	}
 
 

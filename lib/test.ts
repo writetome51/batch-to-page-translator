@@ -6,9 +6,9 @@ let dataSource = {dataTotal: 50};
 // Setup batchinator:
 let batchinator = new Batchinator(dataSource);
 // @ts-ignore
-batchinator.itemsPerPage = 2;
+batchinator.itemsPerBatch = 100;
 // @ts-ignore
-batchinator.itemsPerBatch = 10;
+batchinator.itemsPerPage = 5;
 
 
 // Test 1: make sure 'totalBatches' is accurate:
