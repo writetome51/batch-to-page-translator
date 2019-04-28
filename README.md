@@ -12,26 +12,23 @@ batch to fetch, and tell the Paginator what page to show.
 
 ## Properties
 ```
-// The first 3 properties must be set before doing anything else:
+// The first 2 properties must be set before doing anything else:
 
-totalItems: number;
-    // number of items in entire data set.
+itemsPerBatch: integer
+    // Total number of items the Paginator can handle at once.
     // This must be set first.
-
-itemsPerPage: number;
+    
+itemsPerPage: integer
     // This must be set second.
 
-itemsPerBatch: number;
-    // Total number of items the Paginator can handle at once.
-
-currentBatchNumber: number (read-only);
+currentBatchNumber: integer (read-only)
     // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
 
-totalBatches: number (read-only);
+totalBatches: integer (read-only)
 
-totalPages: number (read-only);
+totalPages: integer (read-only)
 
-pagesPerBatch: number (read-only);
+pagesPerBatch: integer (read-only)
 
 className : string (read-only)
     // Not important.  Inherited from BaseClass.

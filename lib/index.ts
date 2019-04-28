@@ -1,15 +1,14 @@
 import { BaseClass } from '@writetome51/base-class';
 import { errorIfNotInteger } from 'error-if-not-integer';
-import { errorIfNotIntegerZeroOrGreater } from 'error-if-not-integer-zero-or-greater';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
-import { noValue } from '@writetome51/has-value-no-value';
+import { hasValue, noValue } from '@writetome51/has-value-no-value';
 
 
 /********************
- This class is intended to help a separate Paginator class paginate data that can only be saved
- in-memory one batch at-a-time, where each batch is taken from a much bigger data set that can't
+ This class is intended to help a separate Paginator class paginate data that can only be stored
+ in memory one batch at-a-time, because each batch is taken from a much bigger data set that can't
  be completely fetched all at once.
 
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
@@ -17,16 +16,17 @@ import { noValue } from '@writetome51/has-value-no-value';
  *******************/
 
 
-export class Batchinator extends BaseClass {
+export class BatchCalculator extends BaseClass {
 
 	// These first 2 properties must be set before doing anything else:
-	// itemsPerBatch; (must be set first) (total number of items the Paginator can handle at once.)
-	// itemsPerPage;
+	// itemsPerPage
+	// itemsPerBatch  (total number of items the Paginator can handle at once.)
 
-	// currentBatchNumber  (read-only);
-	// totalBatches  (read-only);
-	// totalPages  (read-only);
-	// pagesPerBatch  (read-only);
+	// currentBatchNumber  (read-only)
+	// currentBatchNumberIsLast : boolean  (read-only)
+	// totalBatches  (read-only)
+	// totalPages  (read-only)
+	// pagesPerBatch  (read-only)
 
 	private __itemsPerBatch: number;
 	private __itemsPerPage: number;
@@ -46,33 +46,20 @@ export class Batchinator extends BaseClass {
 	}
 
 
-	set itemsPerBatch(value) {
-		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerBatch');
-		this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerBatch');
-
-		this.__itemsPerBatch = value;
-	}
-
-
-	get itemsPerBatch(): number {
-		this.__errorIfPropertyHasNoValue('itemsPerBatch');
-		return this.__itemsPerBatch;
-	}
-
-
-	// if this.itemsPerBatch / this.itemsPerPage does not divide evenly, Batchinator decrements
-	// this.itemsPerBatch until they do.
+	// If this.itemsPerBatch / this.itemsPerPage does not divide evenly, BatchCalculator decrements
+	// this.itemsPerBatch until they do.  So, sometimes after assigning a value to this.itemsPerPage,
+	// this.itemsPerBatch will change slightly.
 
 	set itemsPerPage(value) {
 		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerPage');
-		this.__errorIfNotEvenlyDivisibleByFive(value, 'itemsPerPage');
-
-		if (value > this.itemsPerBatch) throw new Error(  // makes sure this.itemsPerBatch is set first.
-			`The property "itemsPerPage" cannot be greater than "itemsPerBatch"`
-		);
-
 		this.__itemsPerPage = value;
-		while ((this.__itemsPerBatch % this.__itemsPerPage) !== 0) this.__itemsPerBatch -= 5;
+
+		if (hasValue(this.__itemsPerBatch)) {
+			if (this.__itemsPerPage > this.__itemsPerBatch) throw new Error(
+				`The property "itemsPerPage" cannot be greater than "itemsPerBatch"`
+			);
+			while ((this.__itemsPerBatch % this.__itemsPerPage) !== 0) --this.__itemsPerBatch;
+		}
 	}
 
 
@@ -82,8 +69,43 @@ export class Batchinator extends BaseClass {
 	}
 
 
+	set itemsPerBatch(value) {
+		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerBatch');
+		this.__itemsPerBatch = value;
+
+		// Since itemsPerBatch is changing, there can no longer be a 'current batch number'.  This would
+		// cause buggy behavior.  The user must call this.set_currentBatchNumber_basedOnPage() to
+		// reset this.currentBatchNumber.
+
+		this.__currentBatchNumber = undefined;
+
+		if (hasValue(this.__itemsPerPage)) {
+			if (this.__itemsPerBatch < this.__itemsPerPage) {
+				throw new Error(
+					`The property "itemsPerBatch" cannot be less than "itemsPerPage"`
+				);
+			}
+
+			while ((this.__itemsPerBatch % this.__itemsPerPage) !== 0) --this.__itemsPerBatch;
+		}
+	}
+
+
+	get itemsPerBatch(): number {
+		this.__errorIfPropertyHasNoValue('itemsPerBatch');
+		return this.__itemsPerBatch;
+	}
+
+
+	// set value of  this.currentBatchNumber  using  this.set_currentBatchNumber_basedOnPage(pageNumber)
+
 	get currentBatchNumber(): number {
 		return this.__currentBatchNumber;
+	}
+
+
+	get currentBatchNumberIsLast() {
+		return (this.currentBatchNumber === this.totalBatches);
 	}
 
 
@@ -109,12 +131,14 @@ export class Batchinator extends BaseClass {
 
 
 	currentBatchContainsPage(pageNumber): boolean {
+		if (noValue(this.currentBatchNumber)) return false;
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
 		return (this.currentBatchNumber === batchNumber);
 	}
 
 
 	getBatchNumberContainingPage(pageNumber): number {
+
 		if (not(inRange([1, this.totalPages], pageNumber))) {
 			throw new Error('The requested page does not exist.');
 		}
@@ -147,13 +171,6 @@ export class Batchinator extends BaseClass {
 	private __errorIfValueIsNotOneOrGreater(value, property): void {
 		errorIfNotInteger(value);
 		if (value < 1) throw new Error(`The property "${property}" must be at least 1.`);
-	}
-
-
-	private __errorIfNotEvenlyDivisibleByFive(value, property): void {
-		if (value % 5 !== 0) throw new Error(
-			`The property "${property}" must be a number evenly divisible by 5`
-		);
 	}
 
 
