@@ -21,7 +21,7 @@ if (batchCalc.pagesPerBatch === 20)
 else
     console.log('test 2 FAILED');
 // Test 3: make sure 'totalPages' is accurate:
-if (batchCalc.totalPages === 25)
+if (batchCalc.totalPages === 10)
     console.log('test 3 passed');
 else
     console.log('test 3 FAILED');

@@ -1,13 +1,25 @@
 # Batchinator
 
-A TypeScript/JavaScript class intended to help a separate Paginator class paginate data  
-that can only be saved in-memory one batch at-a-time, where each batch is taken from a  
-much bigger data set that can't be completely fetched all at once.   
+A TypeScript/JavaScript class intended to help a separate Paginator class paginate  
+data that can only be stored in memory one batch at-a-time, because each batch is  
+taken from a much bigger data set that can't be completely fetched all at once.   
 A batch is defined as the total number of items the Paginator can handle at once.
 
-An example: if the user is clicking thru pagination controls and clicks to page 10, it's  
-this class' job to figure out which batch page 10 is in, tell the data-fetching tool what  
-batch to fetch, and tell the Paginator what page to show.
+An example: if the user is clicking thru pagination controls and clicks to page 10,  
+it's this class' job to figure out which batch page 10 is in and tell the Paginator  
+what page to show.
+
+## Constructor
+```
+constructor(
+    private __dataSource: {
+        dataTotal: integer
+            // number of items in entire dataset, not the batch.
+            // This must stay accurate after any actions that change the total, 
+            // such as searches.
+    }
+)
+```
 
 
 ## Properties
@@ -16,10 +28,8 @@ batch to fetch, and tell the Paginator what page to show.
 
 itemsPerBatch: integer
     // Total number of items the Paginator can handle at once.
-    // This must be set first.
     
 itemsPerPage: integer
-    // This must be set second.
 
 currentBatchNumber: integer (read-only)
     // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
