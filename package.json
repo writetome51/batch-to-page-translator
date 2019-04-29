@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/batch-calculator",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be stored in memory one batch at-a-time",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

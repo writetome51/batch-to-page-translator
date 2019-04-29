@@ -44,7 +44,7 @@ if (batchCalc.totalPages === 17) console.log('test 6 passed');
 else console.log('test 6 FAILED');
 
 
-// Test 7: Make sure currentBatchNumber is initialized at 1:
+// Test 7: Make sure currentBatchNumber is undefined:
 if (batchCalc.currentBatchNumber === undefined) console.log('test 7 passed');
 else console.log('test 7 FAILED');
 
@@ -98,21 +98,11 @@ else console.log('test 13 FAILED');
 
 
 // Make sure errors are triggered when assigning properties illegal values:
-errorTriggered = false;
-try {
-	// @ts-ignore
-	let batchNumber = batchCalc.totalDataCount = 1.5;
-} catch (e) {
-	errorTriggered = true;
-}
-if (errorTriggered) console.log('test 15 passed');
-else console.log('test 15 FAILED');
-
 
 errorTriggered = false;
 try {
 	// @ts-ignore
-	let batchNumber = batchCalc.itemsPerPage = 0;
+	batchCalc.itemsPerPage = 0;
 } catch (e) {
 	errorTriggered = true;
 }
@@ -123,7 +113,7 @@ else console.log('test 16 FAILED');
 errorTriggered = false;
 try {
 	// @ts-ignore
-	let batchNumber = batchCalc.itemsPerBatch = '1';
+	batchCalc.itemsPerBatch = '1';
 } catch (e) {
 	errorTriggered = true;
 }
@@ -138,16 +128,19 @@ else console.log('test 18 FAILED');
 
 
 // Test 19
-// current batch number is 3.
+// current batch number is 3.  Does not contain page 14.
 if (batchCalc.currentBatchContainsPage(14)) console.log('test 19 FAILED');
 else console.log('test 19 passed');
 
 
-// @ts-ignore
-batchCalc.totalDataCount = 20;
-// @ts-ignore
-batchCalc.itemsPerPage = 25;
-// @ts-ignore
-batchCalc.itemsPerBatch = 25;
-// @ts-ignore
-console.log(batchCalc.itemsPerBatch);
+batchCalc.itemsPerBatch = 27;
+batchCalc.itemsPerPage = 25; //  itemsPerBatch will change to 25 also.
+
+// Test 20:  make sure when dataSource is updated externally its changes show up in BatchCalculator:
+dataSource.dataTotal = 109;
+if (batchCalc.totalBatches === 5) console.log('test 20 passed');
+else console.log('test 20 FAILED');
+
+
+if (batchCalc.totalPages === 5) console.log('test 21 passed');
+else console.log('test 21 FAILED');
