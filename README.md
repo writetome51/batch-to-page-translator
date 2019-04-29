@@ -41,6 +41,8 @@ itemsPerBatch: integer
 currentBatchNumber: integer (read-only)
     // This is set by calling this.set_currentBatchNumber_basedOnPage() .
 
+currentBatchNumberIsLast: boolean  (read-only)
+
 totalBatches: integer (read-only)
 
 totalPages: integer (read-only)
@@ -64,8 +66,8 @@ currentBatchContainsPage(pageNumber): boolean
 getBatchNumberContainingPage(pageNumber): number
 
 getCurrentPageNumberForPaginator(pageNumber): number
-    // We assume the Paginator doesn't know it's handling batches of a larger data set, 
-    // so this function translates the passed pageNumber into a different number, 
+    // We assume the Paginator doesn't know it's handling batches of a larger data set.
+    // This function translates the passed `pageNumber` into the page number of the current batch, 
     // which it returns. This is the page number the Paginator needs to show.
     // Example:  say this.pagesPerBatch is 10. Say the user requests page 11. That page would be 
     // page 1 of batch 2.  You call this.set_currentBatchNumber_basedOnPage(11), fetch the 
@@ -74,7 +76,7 @@ getCurrentPageNumberForPaginator(pageNumber): number
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .
-```	
+```ts	
 protected   _createGetterAndOrSetterForEach(
                   propertyNames: string[],
                   configuration: IGetterSetterConfiguration
@@ -117,7 +119,85 @@ protected   _runMethod_and_returnThis(
 ## Usage Example
 
 ```
+export class AppPaginator {
 
+	private __batchCalculator: BatchCalculator;
+	private __arrPaginator = new ArrayPaginator(); // the Paginator BatchCalculator helps.
+	
+	private __currentPageNumber: number;
+
+
+	constructor(
+		private __dataSource: {
+
+			dataTotal: number;
+
+			getData: (batchNumber: number,  itemsPerBatch: number,  isLastBatch: boolean) => any[];
+		}
+	) {
+		this.__batchCalculator = new BatchCalculator(this.__dataSource);
+
+		this.itemsPerPage = 25;
+	}
+
+
+	set cacheItemLimit(value) {
+		this.__batchCalculator.itemsPerBatch = value;  // batchinator validates `value`.
+	}
+
+
+	set itemsPerPage(value) {
+		this.__batchCalculator.itemsPerPage = value;
+		this.__arrPaginator.itemsPerPage = value;
+	}
+
+
+	get itemsPerPage(): number {
+		return this.__batchCalculator.itemsPerPage;
+	}
+
+
+	set currentPageNumber(value) {
+		if (this.__batchCalculator.currentBatchContainsPage(value)) {
+			this.__setCurrentPageInCurrentBatch(value);
+		} 
+		else this.__loadBatchAndPage(value);
+
+		this.__currentPageNumber = value;
+	}
+
+
+	get currentPage(): any[] {
+		return this.__arrPaginator.currentPage; // contains all items in currently viewed page.
+	}
+
+
+	private __loadBatchAndPage(pageNumber) {
+		this.__loadBatchContainingPage(pageNumber);
+		this.__setCurrentPageInCurrentBatch(pageNumber);
+	}
+
+
+	private __loadBatchContainingPage(pageNumber) {
+		this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
+
+		// The batch is fetched and given to the Paginator:
+		this.__arrPaginator.data = this.__dataSource.getData(
+
+			this.__batchCalculator.currentBatchNumber,
+			this.__batchCalculator.itemsPerBatch,
+			this.__batchCalculator.currentBatchNumberIsLast
+		);
+	}
+
+
+	private __setCurrentPageInCurrentBatch(pageNumber) {
+		this.__arrPaginator.currentPageNumber =
+			this.__batchCalculator.getCurrentPageNumberForPaginator(pageNumber);
+	}
+
+
+}
 ```
 
 ## Inheritance Chain
@@ -134,7 +214,7 @@ npm install @writetome51/batch-calculator
 
 ## Loading
 
-```
+```ts
 // If using TypeScript:
 import { BatchCalculator } from '@writetome51/batch-calculator';
 // If using ES5 JavaScript:

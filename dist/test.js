@@ -46,7 +46,7 @@ if (batchCalc.totalPages === 17)
 else
     console.log('test 6 FAILED');
 // Test 7: Make sure currentBatchNumber is initialized at 1:
-if (batchCalc.currentBatchNumber === 1)
+if (batchCalc.currentBatchNumber === undefined)
     console.log('test 7 passed');
 else
     console.log('test 7 FAILED');

@@ -45,7 +45,7 @@ else console.log('test 6 FAILED');
 
 
 // Test 7: Make sure currentBatchNumber is initialized at 1:
-if (batchCalc.currentBatchNumber === 1) console.log('test 7 passed');
+if (batchCalc.currentBatchNumber === undefined) console.log('test 7 passed');
 else console.log('test 7 FAILED');
 
 // Test 8: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
