@@ -37,7 +37,7 @@ export class BatchCalculator extends BaseClass {
 		private __dataSource: {
 
 			// dataTotal: number of items in entire dataset, not the batch.
-			// This must stay accurate after user-actions that change the total, such as searches.
+			// This must stay accurate after any actions that change the total, such as searches.
 
 			dataTotal: number;
 		}

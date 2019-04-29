@@ -1,9 +1,9 @@
-# Batchinator
+# BatchCalculator
 
 A TypeScript/JavaScript class intended to help a separate Paginator class paginate  
 data that can only be stored in memory one batch at-a-time, because each batch is  
 taken from a much bigger data set that can't be completely fetched all at once.   
-A batch is defined as the total number of items the Paginator can handle at once.
+A batch is defined as the amount of data the Paginator can handle at once.
 
 An example: if the user is clicking thru pagination controls and clicks to page 10,  
 it's this class' job to figure out which batch page 10 is in and tell the Paginator  
@@ -12,7 +12,7 @@ what page to show.
 ## Constructor
 ```
 constructor(
-    private __dataSource: {
+    dataSource: {
         dataTotal: integer
             // number of items in entire dataset, not the batch.
             // This must stay accurate after any actions that change the total, 
@@ -24,15 +24,22 @@ constructor(
 
 ## Properties
 ```
-// The first 2 properties must be set before doing anything else:
-
-itemsPerBatch: integer
-    // Total number of items the Paginator can handle at once.
+// The first 2 properties, itemsPerPage and itemsPerBatch, must be set before doing 
+// anything else.
+// If this.itemsPerBatch / this.itemsPerPage does not divide evenly, 1 is subtracted
+// from this.itemsPerBatch until they do.  So, sometimes after assigning a value to 
+// either this.itemsPerPage or this.itemsPerBatch, this.itemsPerBatch will change slightly.
     
 itemsPerPage: integer
 
+itemsPerBatch: integer
+    // Total number of items the Paginator can handle at once.
+    // Whenever its value is changed, this.currentBatchNumber becomes undefined.
+    // The user must call this.set_currentBatchNumber_basedOnPage() to
+    // reset this.currentBatchNumber.
+
 currentBatchNumber: integer (read-only)
-    // This is set by calling this.set_currentBatchNumber_basedOnPage(pageNumber) .
+    // This is set by calling this.set_currentBatchNumber_basedOnPage() .
 
 totalBatches: integer (read-only)
 
@@ -169,16 +176,16 @@ Batchinator<--[BaseClass](https://github.com/writetome51/typescript-base-class#b
 You must have npm installed first.  Then, in the command line:
 
 ```bash
-npm install @writetome51/batchinator
+npm install @writetome51/batch-calculator
 ```
 
 ## Loading
 
 ```
 // If using TypeScript:
-import { Batchinator } from '@writetome51/batchinator';
+import { BatchCalculator } from '@writetome51/batch-calculator';
 // If using ES5 JavaScript:
-var Batchinator = require('@writetome51/batchinator').Batchinator;
+var BatchCalculator = require('@writetome51/batch-calculator').BatchCalculator;
 ```   
 
 
