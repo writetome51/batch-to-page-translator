@@ -39,9 +39,9 @@ var BatchCalculator = /** @class */ (function (_super) {
             this.__errorIfPropertyHasNoValue('itemsPerPage');
             return this.__itemsPerPage;
         },
-        // If this.itemsPerBatch / this.itemsPerPage does not divide evenly, BatchCalculator decrements
-        // this.itemsPerBatch until they do.  So, sometimes after assigning a value to this.itemsPerPage,
-        // this.itemsPerBatch will change slightly.
+        // If itemsPerBatch / itemsPerPage does not divide evenly, BatchCalculator decrements
+        // itemsPerBatch until they do.  So, sometimes after assigning a value to either itemsPerPage
+        // or itemsPerBatch, itemsPerBatch will change slightly.
         set: function (value) {
             this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerPage');
             this.__itemsPerPage = value;

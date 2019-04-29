@@ -10,7 +10,7 @@ it's this class' job to figure out which batch page 10 is in and tell the Pagina
 what page to show.
 
 ## Constructor
-```
+```ts
 constructor(
     dataSource: {
         dataTotal: integer
@@ -23,19 +23,19 @@ constructor(
 
 
 ## Properties
-```
+```ts
 // The first 2 properties, itemsPerPage and itemsPerBatch, must be set before doing 
 // anything else.
-// If this.itemsPerBatch / this.itemsPerPage does not divide evenly, 1 is subtracted
-// from this.itemsPerBatch until they do.  So, sometimes after assigning a value to 
-// either this.itemsPerPage or this.itemsPerBatch, this.itemsPerBatch will change slightly.
+// If itemsPerBatch / itemsPerPage does not divide evenly, 1 is subtracted
+// from itemsPerBatch until they do.  So, sometimes after assigning a value to 
+// either itemsPerPage or itemsPerBatch,  itemsPerBatch will change slightly.
     
 itemsPerPage: integer
 
 itemsPerBatch: integer
     // Total number of items the Paginator can handle at once.
     // Whenever its value is changed, this.currentBatchNumber becomes undefined.
-    // The user must call this.set_currentBatchNumber_basedOnPage() to
+    // You must call this.set_currentBatchNumber_basedOnPage() to
     // reset this.currentBatchNumber.
 
 currentBatchNumber: integer (read-only)
@@ -52,7 +52,7 @@ className : string (read-only)
 ```
 
 ## Methods
-```
+```ts
 set_currentBatchNumber_basedOnPage(pageNumber): void
     // Figures out the batch number that contains pageNumber, and
     // assigns it to this.currentBatchNumber .
@@ -117,59 +117,12 @@ protected   _runMethod_and_returnThis(
 ## Usage Example
 
 ```
-export class PaginationDataController {
 
-    constructor(
-        private __batchinator: Batchinator,
-        private __paginator: { data: any[], itemsPerPage: number, currentPageNumber: number },
-        private __dataService: DataService // as of now, an imaginary interface
-    ) { 
-        // Set properties 'totalItems', 'itemsPerPage', and 'itemsPerBatch' before doing 
-        // anything else with the batchinator:
-        this.__batchinator.totalItems = this.__dataService.getTotalDataCount();
-        this.__batchinator.itemsPerPage = this.__paginator.itemsPerPage;
-        this.__batchinator.itemsPerBatch = 500;
-
-        this.__loadBatchAndPage(1);
-    }
-
-
-    showPage(pageNumber) {
-        if (this.__batchinator.currentBatchContainsPage(pageNumber)) {
-            this.__showPageInCurrentBatch(pageNumber);
-        }
-        else this.__loadBatchAndPage(pageNumber);
-    }
-
-
-    private __showPageInCurrentBatch(pageNumber){
-        this.__paginator.currentPageNumber = 
-            this.__batchinator.getCurrentPageNumberForPaginator(pageNumber);
-    }
-
-
-    private __loadBatchAndPage(pageNumber){
-        this.__loadBatchContainingPage(pageNumber);
-        this.__showPageInCurrentBatch(pageNumber);
-    }
-
-
-    private __loadBatchContainingPage(pageNumber){
-        this.__batchinator.set_currentBatchNumber_basedOnPage(pageNumber);
-
-        this.__paginator.data = this.__dataService.getData(
-            this.__batchinator.currentBatchNumber,
-            this.__batchinator.itemsPerBatch
-        );
-    }
-
-
-}
 ```
 
 ## Inheritance Chain
 
-Batchinator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
+BatchCalculator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
 
 ## Installation
 
