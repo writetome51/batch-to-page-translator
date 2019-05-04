@@ -38,6 +38,7 @@
     "@writetome51/get-rounded-up-down": "~1.0.11",
     "@writetome51/in-range": "~1.0.4",
     "@writetome51/not": "~1.0.5",
-    "@writetome51/has-value-no-value": "~1.0.2"
+    "@writetome51/has-value-no-value": "~1.0.2",
+    "@writetome51/array-paginator": "~4.0.0"
   }
 }
