@@ -20,9 +20,8 @@ var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 var in_range_1 = require("@writetome51/in-range");
 var not_1 = require("@writetome51/not");
 /********************
- This class is intended to help a separate Paginator class paginate data that can only be stored
- in memory one batch at-a-time, because each batch is taken from a much bigger data set that can't
- be completely fetched all at once.
+ Has properties that give information about a dataset too big to be loaded all at once that
+ is stored in memory one batch at-a-time, with the intention of paginating the batch.
  *******************/
 var PaginationBatchInfo = /** @class */ (function (_super) {
     __extends(PaginationBatchInfo, _super);
@@ -34,19 +33,12 @@ var PaginationBatchInfo = /** @class */ (function (_super) {
     Object.defineProperty(PaginationBatchInfo.prototype, "itemsPerBatch", {
         get: function () {
             this._errorIfPropertyHasNoValue('__itemsPerBatch', 'itemsPerBatch');
-            var oldValue = this.__itemsPerBatch;
-            this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
-            if (oldValue !== this.__itemsPerBatch)
-                this.__currentBatchNumber = undefined;
+            this.__checkValueOf_itemsPerBatch();
             return this.__itemsPerBatch;
         },
         set: function (value) {
             this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerBatch');
-            this.__itemsPerBatch = value;
-            this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
-            // Whenever itemsPerBatch changes, there can no longer be a 'current batch number'.  This would
-            // cause buggy behavior.  It must be reset after setting the value of this.__itemsPerBatch .
-            this.__currentBatchNumber = undefined;
+            this.__checkValueOf_itemsPerBatch(value);
         },
         enumerable: true,
         configurable: true
@@ -90,6 +82,17 @@ var PaginationBatchInfo = /** @class */ (function (_super) {
         error_if_not_integer_1.errorIfNotInteger(value);
         if (value < 1)
             throw new Error("The property \"" + property + "\" must be at least 1.");
+    };
+    PaginationBatchInfo.prototype.__checkValueOf_itemsPerBatch = function (newValue) {
+        if (newValue === void 0) { newValue = undefined; }
+        var oldValue = this.__itemsPerBatch;
+        if (has_value_no_value_1.hasValue(newValue))
+            this.__itemsPerBatch = newValue;
+        this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
+        // Whenever itemsPerBatch changes, there can no longer be a currentBatchNumber.  This would
+        // cause logic errors.  It must be unset so the user is forced to reset it.
+        if (oldValue !== this.__itemsPerBatch)
+            this.__currentBatchNumber = undefined;
     };
     // If itemsPerBatch / itemsPerPage does not divide evenly, itemsPerBatch is decremented until
     // they do.  So, sometimes after assigning a value to either itemsPerPage or itemsPerBatch,

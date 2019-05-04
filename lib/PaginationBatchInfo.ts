@@ -8,16 +8,15 @@ import { PaginationPageInfo } from './PaginationPageInfo';
 
 
 /********************
- This class is intended to help a separate Paginator class paginate data that can only be stored
- in memory one batch at-a-time, because each batch is taken from a much bigger data set that can't
- be completely fetched all at once.
+ Has properties that give information about a dataset too big to be loaded all at once that
+ is stored in memory one batch at-a-time, with the intention of paginating the batch.
  *******************/
 
 
 export class PaginationBatchInfo extends BaseClass {
 
-	// 'itemsPerBatch' must be set before doing anything else:
-	// itemsPerBatch  (total number of items the Paginator can handle at once.)
+	// `itemsPerBatch` must be set before doing anything else with the class.
+	// itemsPerBatch  (total number of items the paginator can handle at once.)
 	// currentBatchNumber
 
 	// currentBatchNumberIsLast : boolean  (read-only)
@@ -37,24 +36,15 @@ export class PaginationBatchInfo extends BaseClass {
 
 	set itemsPerBatch(value) {
 		this.__errorIfValueIsNotOneOrGreater(value, 'itemsPerBatch');
-		this.__itemsPerBatch = value;
 
-		this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
-
-		// Whenever itemsPerBatch changes, there can no longer be a 'current batch number'.  This would
-		// cause buggy behavior.  It must be reset after setting the value of this.__itemsPerBatch .
-
-		this.__currentBatchNumber = undefined;
+		this.__checkValueOf_itemsPerBatch(value);
 	}
 
 
 	get itemsPerBatch(): number {
 		this._errorIfPropertyHasNoValue('__itemsPerBatch', 'itemsPerBatch');
 
-		let oldValue = this.__itemsPerBatch;
-		this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
-		if (oldValue !== this.__itemsPerBatch) this.__currentBatchNumber = undefined;
-
+		this.__checkValueOf_itemsPerBatch();
 		return this.__itemsPerBatch;
 	}
 
@@ -95,11 +85,24 @@ export class PaginationBatchInfo extends BaseClass {
 	}
 
 
+	private __checkValueOf_itemsPerBatch(newValue = undefined) {
+		let oldValue = this.__itemsPerBatch;
+		if (hasValue(newValue)) this.__itemsPerBatch = newValue;
+
+		this.__ensure_itemsPerBatch_isCompatibleWith_itemsPerPage();
+
+		// Whenever itemsPerBatch changes, there can no longer be a currentBatchNumber.  This would
+		// cause logic errors.  It must be unset so the user is forced to reset it.
+
+		if (oldValue !== this.__itemsPerBatch) this.__currentBatchNumber = undefined;
+	}
+
+
 	// If itemsPerBatch / itemsPerPage does not divide evenly, itemsPerBatch is decremented until
 	// they do.  So, sometimes after assigning a value to either itemsPerPage or itemsPerBatch,
 	// itemsPerBatch will change slightly.
 
-	private __ensure_itemsPerBatch_isCompatibleWith_itemsPerPage() {
+	private __ensure_itemsPerBatch_isCompatibleWith_itemsPerPage(): void {
 
 		if (hasValue(this.__pageInfo.itemsPerPage)) {
 			if (this.__itemsPerBatch < this.__pageInfo.itemsPerPage) {
@@ -109,6 +112,7 @@ export class PaginationBatchInfo extends BaseClass {
 			}
 			while ((this.__itemsPerBatch % this.__pageInfo.itemsPerPage) !== 0) --this.__itemsPerBatch;
 		}
+
 	}
 
 
