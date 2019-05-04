@@ -1,9 +1,10 @@
 import { BaseClass } from '@writetome51/base-class';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
-import { hasValue, noValue } from '@writetome51/has-value-no-value';
+import { noValue } from '@writetome51/has-value-no-value';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
 import { PaginationPageInfo } from './PaginationPageInfo';
+import { PaginationBatchInfo } from './PaginationBatchInfo';
 
 
 /********************
@@ -19,46 +20,32 @@ import { PaginationPageInfo } from './PaginationPageInfo';
 export class BatchToPageTranslator extends BaseClass {
 
 
-	// currentBatchNumber  (read-only)
-	// currentBatchNumberIsLast : boolean  (read-only)
-
-	private __itemsPerBatch: number;
-	private __currentBatchNumber: number;
-
-
 	constructor(
-		private __dataSource: {
-
-			// dataTotal: number of items in entire dataset, not the batch.
-			// This must stay accurate after any actions that change the total, such as searches.
-
-			dataTotal: number;
-		},
-
-		private __paginationPageInfo: PaginationPageInfo
+		private __pageInfo: PaginationPageInfo,
+		private __batchInfo: PaginationBatchInfo
 	) {
 		super();
 	}
 
 
-	set_currentBatchNumber_basedOnPage(pageNumber): void {
-		this.__currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
+	set_currentBatchNumber_toBatchContainingPage(pageNumber): void {
+		this.__batchInfo.currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
 	}
 
 
 	getBatchNumberContainingPage(pageNumber): number {
 
-		if (not(inRange([1, this.__paginationPageInfo.totalPages], pageNumber))) {
+		if (not(inRange([1, this.__pageInfo.totalPages], pageNumber))) {
 			throw new Error('The requested page does not exist.');
 		}
-		return getRoundedUp(pageNumber / this.pagesPerBatch);
+		return getRoundedUp(pageNumber / this.__batchInfo.pagesPerBatch);
 	}
 
 
 	currentBatchContainsPage(pageNumber): boolean {
-		if (noValue(this.currentBatchNumber)) return false;
+		if (noValue(this.__batchInfo.currentBatchNumber)) return false;
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
-		return (this.currentBatchNumber === batchNumber);
+		return (this.__batchInfo.currentBatchNumber === batchNumber);
 	}
 
 
@@ -68,12 +55,16 @@ export class BatchToPageTranslator extends BaseClass {
 
 	getCurrentPageNumberForPaginator(pageNumber): number {
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
-		if (this.currentBatchNumber !== batchNumber) {
+		if (this.__batchInfo.currentBatchNumber !== batchNumber) {
 			throw new Error(`The property "currentBatchNumber" is not set to the batch number 
-			that contains the passed pageNumber. Call this.set_currentBatchNumber_basedOnPage(pageNumber)
-			before calling this function.`);
+			that contains the passed pageNumber. 
+			Call this.set_currentBatchNumber_toBatchContainingPage(pageNumber) before calling 
+			this function.`);
 		}
-		return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
+		return (
+			pageNumber
+			- ((this.__batchInfo.currentBatchNumber - 1) * this.__batchInfo.pagesPerBatch)
+		);
 	}
 
 

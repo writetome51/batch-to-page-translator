@@ -28,36 +28,37 @@ var not_1 = require("@writetome51/not");
  *******************/
 var BatchToPageTranslator = /** @class */ (function (_super) {
     __extends(BatchToPageTranslator, _super);
-    function BatchToPageTranslator(__dataSource, __paginationPageInfo) {
+    function BatchToPageTranslator(__pageInfo, __batchInfo) {
         var _this = _super.call(this) || this;
-        _this.__dataSource = __dataSource;
-        _this.__paginationPageInfo = __paginationPageInfo;
+        _this.__pageInfo = __pageInfo;
+        _this.__batchInfo = __batchInfo;
         return _this;
     }
-    BatchToPageTranslator.prototype.set_currentBatchNumber_basedOnPage = function (pageNumber) {
-        this.__currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
+    BatchToPageTranslator.prototype.set_currentBatchNumber_toBatchContainingPage = function (pageNumber) {
+        this.__batchInfo.currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
     };
     BatchToPageTranslator.prototype.getBatchNumberContainingPage = function (pageNumber) {
-        if (not_1.not(in_range_1.inRange([1, this.__paginationPageInfo.totalPages], pageNumber))) {
+        if (not_1.not(in_range_1.inRange([1, this.__pageInfo.totalPages], pageNumber))) {
             throw new Error('The requested page does not exist.');
         }
-        return get_rounded_up_down_1.getRoundedUp(pageNumber / this.pagesPerBatch);
+        return get_rounded_up_down_1.getRoundedUp(pageNumber / this.__batchInfo.pagesPerBatch);
     };
     BatchToPageTranslator.prototype.currentBatchContainsPage = function (pageNumber) {
-        if (has_value_no_value_1.noValue(this.currentBatchNumber))
+        if (has_value_no_value_1.noValue(this.__batchInfo.currentBatchNumber))
             return false;
         var batchNumber = this.getBatchNumberContainingPage(pageNumber);
-        return (this.currentBatchNumber === batchNumber);
+        return (this.__batchInfo.currentBatchNumber === batchNumber);
     };
     // Because the Paginator is not designed for handling batches (we assume), we have to translate
     // the passed pageNumber into a different number, returned by this function, which is the page
     // number the Paginator needs to show.
     BatchToPageTranslator.prototype.getCurrentPageNumberForPaginator = function (pageNumber) {
         var batchNumber = this.getBatchNumberContainingPage(pageNumber);
-        if (this.currentBatchNumber !== batchNumber) {
-            throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. Call this.set_currentBatchNumber_basedOnPage(pageNumber)\n\t\t\tbefore calling this function.");
+        if (this.__batchInfo.currentBatchNumber !== batchNumber) {
+            throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. \n\t\t\tCall this.set_currentBatchNumber_toBatchContainingPage(pageNumber) before calling \n\t\t\tthis function.");
         }
-        return (pageNumber - ((this.currentBatchNumber - 1) * this.pagesPerBatch));
+        return (pageNumber
+            - ((this.__batchInfo.currentBatchNumber - 1) * this.__batchInfo.pagesPerBatch));
     };
     return BatchToPageTranslator;
 }(base_class_1.BaseClass));

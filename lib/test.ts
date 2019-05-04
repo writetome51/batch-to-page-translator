@@ -48,17 +48,17 @@ else console.log('test 6 FAILED');
 if (batchCalc.currentBatchNumber === undefined) console.log('test 7 passed');
 else console.log('test 7 FAILED');
 
-// Test 8: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 8: Make sure this.set_currentBatchNumber_toBatchContainingPage() sets currentBatchNumber correctly:
 batchCalc.set_currentBatchNumber_basedOnPage(8);
 if (batchCalc.currentBatchNumber === 2) console.log('test 8 passed');
 else console.log('test 8 FAILED');
 
-// Test 9: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 9: Make sure this.set_currentBatchNumber_toBatchContainingPage() sets currentBatchNumber correctly:
 batchCalc.set_currentBatchNumber_basedOnPage(14);
 if (batchCalc.currentBatchNumber === 2) console.log('test 9 passed');
 else console.log('test 9 FAILED');
 
-// Test 10: Make sure this.set_currentBatchNumber_basedOnPage() sets currentBatchNumber correctly:
+// Test 10: Make sure this.set_currentBatchNumber_toBatchContainingPage() sets currentBatchNumber correctly:
 batchCalc.set_currentBatchNumber_basedOnPage(15);
 if (batchCalc.currentBatchNumber === 3) console.log('test 10 passed');
 else console.log('test 10 FAILED');
