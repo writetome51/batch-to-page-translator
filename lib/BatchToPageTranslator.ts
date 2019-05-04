@@ -49,11 +49,11 @@ export class BatchToPageTranslator extends BaseClass {
 	}
 
 
-	// Because the Paginator is not designed for handling batches (we assume), we have to translate
-	// the passed pageNumber into a different number, returned by this function, which is the page
-	// number the Paginator needs to show.
+	// Takes `pageNumber` and translates it into a page of the current batch.
+	// Example: say pagesPerBatch is 10, the currentBatchNumber is 2, and passed
+	// `pageNumber` is 11. That would be page 1 of the current batch, so the function returns 1.
 
-	getCurrentPageNumberForPaginator(pageNumber): number {
+	getPageNumberInCurrentBatchFromAbsolutePage(pageNumber): number {
 		let batchNumber = this.getBatchNumberContainingPage(pageNumber);
 		if (this.__batchInfo.currentBatchNumber !== batchNumber) {
 			throw new Error(`The property "currentBatchNumber" is not set to the batch number 

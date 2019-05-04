@@ -49,10 +49,10 @@ var BatchToPageTranslator = /** @class */ (function (_super) {
         var batchNumber = this.getBatchNumberContainingPage(pageNumber);
         return (this.__batchInfo.currentBatchNumber === batchNumber);
     };
-    // Because the Paginator is not designed for handling batches (we assume), we have to translate
-    // the passed pageNumber into a different number, returned by this function, which is the page
-    // number the Paginator needs to show.
-    BatchToPageTranslator.prototype.getCurrentPageNumberForPaginator = function (pageNumber) {
+    // Takes `pageNumber` and translates it into a page of the current batch.
+    // Example: say pagesPerBatch is 10, the currentBatchNumber is 2, and passed
+    // `pageNumber` is 11. That would be page 1 of the current batch, so the function returns 1.
+    BatchToPageTranslator.prototype.getPageNumberInCurrentBatchFromAbsolutePage = function (pageNumber) {
         var batchNumber = this.getBatchNumberContainingPage(pageNumber);
         if (this.__batchInfo.currentBatchNumber !== batchNumber) {
             throw new Error("The property \"currentBatchNumber\" is not set to the batch number \n\t\t\tthat contains the passed pageNumber. \n\t\t\tCall this.set_currentBatchNumber_toBatchContainingPage(pageNumber) before calling \n\t\t\tthis function.");

@@ -85,7 +85,7 @@ if (arraysMatch(expectedResults, results)) console.log('test 12 passed');
 else console.log('test 12 FAILED');
 
 
-// Test 13: test this.getCurrentPageNumberForPaginator()
+// Test 13: test this.getPageNumberInCurrentBatchFromAbsolutePage()
 differentPages = [1, 7, 8, 14, 15, 17];
 expectedResults = [1, 7, 1, 7, 1, 3];
 results = [];
