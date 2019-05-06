@@ -1,10 +1,9 @@
-import { ArrayPaginator } from '@writetome51/array-paginator';
 import { BaseClass } from '@writetome51/base-class';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 
 
 /********************
- This class is intended to help a separate Paginator class paginate data.
+ Intended to help a separate Paginator class paginate data.
  Specifically, this class contains the properties `itemsPerPage` and `totalPages`, which will
  be used by other classes, like the Paginator.
  *******************/
@@ -21,10 +20,11 @@ export class PaginationPageInfo extends BaseClass {
 
 			dataTotal: number;
 		},
+
 		// Stores and paginates an array, which it assumes is the entire dataset.
 		// We need this for its property 'itemsPerPage'.
 
-		private __arrPaginator: ArrayPaginator
+		private __arrPaginator: { itemsPerPage: number }
 	) {
 		super();
 	}

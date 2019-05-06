@@ -3,8 +3,6 @@ import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 import { noValue } from '@writetome51/has-value-no-value';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
-import { PaginationPageInfo } from './PaginationPageInfo';
-import { PaginationBatchInfo } from './PaginationBatchInfo';
 
 
 /********************
@@ -21,8 +19,8 @@ export class BatchToPageTranslator extends BaseClass {
 
 
 	constructor(
-		private __pageInfo: PaginationPageInfo,
-		private __batchInfo: PaginationBatchInfo
+		private __pageInfo: { totalPages: number },
+		private __batchInfo: { currentBatchNumber: number, pagesPerBatch: number }
 	) {
 		super();
 	}

@@ -4,7 +4,6 @@ import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 import { hasValue, noValue } from '@writetome51/has-value-no-value';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
-import { PaginationPageInfo } from './PaginationPageInfo';
 
 
 /********************
@@ -28,7 +27,7 @@ export class PaginationBatchInfo extends BaseClass {
 
 
 	constructor(
-		private __pageInfo: PaginationPageInfo
+		private __pageInfo: {itemsPerPage: number, totalPages: number}
 	) {
 		super();
 	}

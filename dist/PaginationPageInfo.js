@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var base_class_1 = require("@writetome51/base-class");
 var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 /********************
- This class is intended to help a separate Paginator class paginate data.
+ Intended to help a separate Paginator class paginate data.
  Specifically, this class contains the properties `itemsPerPage` and `totalPages`, which will
  be used by other classes, like the Paginator.
  *******************/
