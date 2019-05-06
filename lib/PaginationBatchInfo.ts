@@ -1,7 +1,7 @@
 import { BaseClass } from '@writetome51/base-class';
 import { errorIfNotInteger } from 'error-if-not-integer';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
-import { hasValue, noValue } from '@writetome51/has-value-no-value';
+import { hasValue } from '@writetome51/has-value-no-value';
 import { inRange } from '@writetome51/in-range';
 import { not } from '@writetome51/not';
 
