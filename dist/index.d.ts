@@ -16,23 +16,26 @@ export declare class BatchToPageTranslator extends BaseClass {
 	private __batchInfo;
 
 
-	constructor(__pageInfo: {
-		totalPages: number;
-	}, __batchInfo: {
-		currentBatchNumber: number;
-		pagesPerBatch: number;
-	});
+	constructor(
+		__pageInfo: {
+			totalPages: number;
+		},
+		__batchInfo: {
+			currentBatchNumber: number;
+			pagesPerBatch: number;
+		}
+	);
 
 
-	set_currentBatchNumber_toBatchContainingPage(pageNumber: any): void;
+	set_currentBatchNumber_toBatchContainingPage(pageNumber: number): void;
 
 
-	getBatchNumberContainingPage(pageNumber: any): number;
+	getBatchNumberContainingPage(pageNumber: number): number;
 
 
-	currentBatchContainsPage(pageNumber: any): boolean;
+	currentBatchContainsPage(pageNumber: number): boolean;
 
 
-	getPageNumberInCurrentBatchFromAbsolutePage(pageNumber: any): number;
+	getPageNumberInCurrentBatchFromAbsolutePage(pageNumber: number): number;
 
 }

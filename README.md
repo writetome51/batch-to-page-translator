@@ -10,69 +10,54 @@ it's this class' job to figure out which batch page 10 is in and tell the Pagina
 what page to show.
 
 ## Constructor
+<details>
+<summary>view constructor</summary>
+
 ```ts
 constructor(
-    dataSource: {
-        dataTotal: integer
-            // number of items in entire dataset, not the batch.
-            // This must stay accurate after any actions that change the total, 
-            // such as searches.
+    pageInfo: {
+        totalPages: number;
+    },
+    
+    batchInfo: {
+        currentBatchNumber: number;
+        pagesPerBatch: number;
     }
 )
 ```
+</details>
 
 
 ## Properties
+<details>
+<summary>view properties</summary>
+
 ```ts
-// The first 2 properties, itemsPerPage and itemsPerBatch, must be set before doing 
-// anything else.
-// If itemsPerBatch / itemsPerPage does not divide evenly, 1 is subtracted
-// from itemsPerBatch until they do.  So, sometimes after assigning a value to 
-// either itemsPerPage or itemsPerBatch,  itemsPerBatch will change slightly.
-    
-itemsPerPage: integer
-
-itemsPerBatch: integer
-    // Total number of items the Paginator can handle at once.
-    // Whenever its value is changed, this.currentBatchNumber becomes undefined.
-    // You must call this.set_currentBatchNumber_basedOnPage() to
-    // reset this.currentBatchNumber.
-
-currentBatchNumber: integer (read-only)
-    // This is set by calling this.set_currentBatchNumber_basedOnPage() .
-
-currentBatchNumberIsLast: boolean  (read-only)
-
-totalBatches: integer (read-only)
-
-totalPages: integer (read-only)
-
-pagesPerBatch: integer (read-only)
-
 className : string (read-only)
     // Not important.  Inherited from BaseClass.
 ```
+</details>
 
 ## Methods
+<details>
+<summary>view methods</summary>
+
 ```ts
-set_currentBatchNumber_basedOnPage(pageNumber): void
+set_currentBatchNumber_toBatchContainingPage(pageNumber): void
     // Figures out the batch number that contains pageNumber, and
-    // assigns it to this.currentBatchNumber .
+    // assigns it to `batchInfo.currentBatchNumber` (from the constructor).
 
 currentBatchContainsPage(pageNumber): boolean
     // Useful if you need to find out if the batch containing pageNumber 
-    // is already the currently loaded batch.
+    // is already `batchInfo.currentBatchNumber`.
 
 getBatchNumberContainingPage(pageNumber): number
 
-getCurrentPageNumberForPaginator(pageNumber): number
-    // We assume the Paginator doesn't know it's handling batches of a larger data set.
-    // This function translates the passed `pageNumber` into the page number of the current batch, 
-    // which it returns. This is the page number the Paginator needs to show.
-    // Example:  say this.pagesPerBatch is 10. Say the user requests page 11. That page would be 
-    // page 1 of batch 2.  You call this.set_currentBatchNumber_basedOnPage(11), fetch the 
-    // batch, assign it to the Paginator, and call this.getCurrentPageNumberForPaginator(11). 
-    // It will return 1. That's the page number Paginator must show.
+getPageNumberInCurrentBatchFromAbsolutePage(pageNumber): number
+    // Takes pageNumber and translates it into a page of the current batch.
+    // Example: say `batchInfo.pagesPerBatch` is 10, `batchInfo.currentBatchNumber` 
+    // is 2, and passed `pageNumber` is 11. That would be page 1 of the current 
+    // batch, so the function returns 1.
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .
@@ -108,96 +93,20 @@ protected   _returnThis_after(voidExpression: any) : this
     // voidExpression is executed, then function returns this.
     // Even if voidExpression returns something, the returned data isn't used.
 
-protected   _runMethod_and_returnThis(
-    callingObject, 
-    method: Function, 
-    methodArgs: any[], 
-    additionalAction?: Function // takes the result returned by method as an argument.
-) : this
-```   
+
+protected   _errorIfPropertyHasNoValue(
+                property: string, // can contain dot-notation, i.e., 'property.subproperty'
+                propertyNameInError? = ''
+            ) : void
+    // If value of this[property] is undefined or null, it triggers fatal error:
+    // `The property "${propertyNameInError}" has no value.`
+```
+</details>
 
 ## Usage Example
 
 ```
-export class AppPaginator {
 
-	private __bch2pgTranslator: BatchToPageTranslator;
-	private __arrPaginator = new ArrayPaginator(); // the Paginator that BatchToPageTranslator helps.
-	
-	private __currentPageNumber: number;
-
-
-	constructor(
-		private __dataSource: {
-
-			dataTotal: number;
-
-			getData: (batchNumber: number,  itemsPerBatch: number,  isLastBatch: boolean) => any[];
-		}
-	) {
-		this.__bch2pgTranslator = new BatchToPageTranslator(this.__dataSource);
-
-		this.itemsPerPage = 25;
-	}
-
-
-	set cacheItemLimit(value) {
-		this.__bch2pgTranslator.itemsPerBatch = value;  // batchinator validates `value`.
-	}
-
-
-	set itemsPerPage(value) {
-		this.__bch2pgTranslator.itemsPerPage = value;
-		this.__arrPaginator.itemsPerPage = value;
-	}
-
-
-	get itemsPerPage(): number {
-		return this.__bch2pgTranslator.itemsPerPage;
-	}
-
-
-	set currentPageNumber(value) {
-		if (this.__bch2pgTranslator.currentBatchContainsPage(value)) {
-			this.__setCurrentPageInCurrentBatch(value);
-		} 
-		else this.__loadBatchAndPage(value);
-
-		this.__currentPageNumber = value;
-	}
-
-
-	get currentPage(): any[] {
-		return this.__arrPaginator.currentPage; // contains all items in currently viewed page.
-	}
-
-
-	private __loadBatchAndPage(pageNumber) {
-		this.__loadBatchContainingPage(pageNumber);
-		this.__setCurrentPageInCurrentBatch(pageNumber);
-	}
-
-
-	private __loadBatchContainingPage(pageNumber) {
-		this.__bch2pgTranslator.set_currentBatchNumber_basedOnPage(pageNumber);
-
-		// The batch is fetched and given to the Paginator:
-		this.__arrPaginator.data = this.__dataSource.getData(
-
-			this.__bch2pgTranslator.currentBatchNumber,
-			this.__bch2pgTranslator.itemsPerBatch,
-			this.__bch2pgTranslator.currentBatchNumberIsLast
-		);
-	}
-
-
-	private __setCurrentPageInCurrentBatch(pageNumber) {
-		this.__arrPaginator.currentPageNumber =
-			this.__bch2pgTranslator.getCurrentPageNumberForPaginator(pageNumber);
-	}
-
-
-}
 ```
 
 ## Inheritance Chain
