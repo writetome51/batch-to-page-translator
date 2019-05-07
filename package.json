@@ -1,5 +1,5 @@
 {
-  "name": "@writetome51/batch-calculator",
+  "name": "@writetome51/batch-to-page-translator",
   "version": "1.0.0",
   "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be stored in memory one batch at-a-time",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/writetome51/batch-calculator.git"
+    "url": "git+https://github.com/writetome51/batch-to-page-translator.git"
   },
   "keywords": [
     "array",
@@ -25,20 +25,19 @@
   "author": "Steve Thompson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/writetome51/batch-calculator/issues"
+    "url": "https://github.com/writetome51/batch-to-page-translator/issues"
   },
-  "homepage": "https://github.com/writetome51/batch-calculator#readme",
+  "homepage": "https://github.com/writetome51/batch-to-page-translator#readme",
   "devDependencies": {
     "@writetome51/arrays-match": "~1.0.6"
   },
   "dependencies": {
-    "error-if-not-integer": "~1.0.0",
-    "error-if-not-integer-zero-or-greater": "~1.0.0",
     "@writetome51/base-class": "~1.0.0",
     "@writetome51/get-rounded-up-down": "~1.0.11",
     "@writetome51/in-range": "~1.0.4",
     "@writetome51/not": "~1.0.5",
     "@writetome51/has-value-no-value": "~1.0.2",
-    "@writetome51/array-paginator": "~4.0.0"
+    "@writetome51/pagination-page-info": "~0.0.1",
+    "@writetome51/pagination-batch-info": "~0.0.1"
   }
 }

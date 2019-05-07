@@ -1,4 +1,4 @@
-# BatchCalculator
+# BatchToPageTranslator
 
 A TypeScript/JavaScript class intended to help a separate Paginator class paginate  
 data that can only be stored in memory one batch at-a-time, because each batch is  
@@ -121,8 +121,8 @@ protected   _runMethod_and_returnThis(
 ```
 export class AppPaginator {
 
-	private __batchCalculator: BatchCalculator;
-	private __arrPaginator = new ArrayPaginator(); // the Paginator BatchCalculator helps.
+	private __bch2pgTranslator: BatchToPageTranslator;
+	private __arrPaginator = new ArrayPaginator(); // the Paginator that BatchToPageTranslator helps.
 	
 	private __currentPageNumber: number;
 
@@ -135,30 +135,30 @@ export class AppPaginator {
 			getData: (batchNumber: number,  itemsPerBatch: number,  isLastBatch: boolean) => any[];
 		}
 	) {
-		this.__batchCalculator = new BatchCalculator(this.__dataSource);
+		this.__bch2pgTranslator = new BatchToPageTranslator(this.__dataSource);
 
 		this.itemsPerPage = 25;
 	}
 
 
 	set cacheItemLimit(value) {
-		this.__batchCalculator.itemsPerBatch = value;  // batchinator validates `value`.
+		this.__bch2pgTranslator.itemsPerBatch = value;  // batchinator validates `value`.
 	}
 
 
 	set itemsPerPage(value) {
-		this.__batchCalculator.itemsPerPage = value;
+		this.__bch2pgTranslator.itemsPerPage = value;
 		this.__arrPaginator.itemsPerPage = value;
 	}
 
 
 	get itemsPerPage(): number {
-		return this.__batchCalculator.itemsPerPage;
+		return this.__bch2pgTranslator.itemsPerPage;
 	}
 
 
 	set currentPageNumber(value) {
-		if (this.__batchCalculator.currentBatchContainsPage(value)) {
+		if (this.__bch2pgTranslator.currentBatchContainsPage(value)) {
 			this.__setCurrentPageInCurrentBatch(value);
 		} 
 		else this.__loadBatchAndPage(value);
@@ -179,21 +179,21 @@ export class AppPaginator {
 
 
 	private __loadBatchContainingPage(pageNumber) {
-		this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
+		this.__bch2pgTranslator.set_currentBatchNumber_basedOnPage(pageNumber);
 
 		// The batch is fetched and given to the Paginator:
 		this.__arrPaginator.data = this.__dataSource.getData(
 
-			this.__batchCalculator.currentBatchNumber,
-			this.__batchCalculator.itemsPerBatch,
-			this.__batchCalculator.currentBatchNumberIsLast
+			this.__bch2pgTranslator.currentBatchNumber,
+			this.__bch2pgTranslator.itemsPerBatch,
+			this.__bch2pgTranslator.currentBatchNumberIsLast
 		);
 	}
 
 
 	private __setCurrentPageInCurrentBatch(pageNumber) {
 		this.__arrPaginator.currentPageNumber =
-			this.__batchCalculator.getCurrentPageNumberForPaginator(pageNumber);
+			this.__bch2pgTranslator.getCurrentPageNumberForPaginator(pageNumber);
 	}
 
 
@@ -202,23 +202,23 @@ export class AppPaginator {
 
 ## Inheritance Chain
 
-BatchCalculator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
+BatchToPageTranslator<--[BaseClass](https://github.com/writetome51/typescript-base-class#baseclass)
 
 ## Installation
 
 You must have npm installed first.  Then, in the command line:
 
 ```bash
-npm install @writetome51/batch-calculator
+npm install @writetome51/batch-to-page-translator
 ```
 
 ## Loading
 
 ```ts
 // If using TypeScript:
-import { BatchCalculator } from '@writetome51/batch-calculator';
+import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
 // If using ES5 JavaScript:
-var BatchCalculator = require('@writetome51/batch-calculator').BatchCalculator;
+var BatchToPageTranslator = require('@writetome51/batch-to-page-translator').BatchToPageTranslator;
 ```   
 
 
