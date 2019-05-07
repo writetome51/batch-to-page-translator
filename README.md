@@ -127,7 +127,8 @@ npm install @writetome51/batch-to-page-translator
 // If using TypeScript:
 import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
 // If using ES5 JavaScript:
-var BatchToPageTranslator = require('@writetome51/batch-to-page-translator').BatchToPageTranslator;
+var BatchToPageTranslator = 
+    require('@writetome51/batch-to-page-translator').BatchToPageTranslator;
 ```   
 
 
