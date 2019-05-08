@@ -1,7 +1,7 @@
 {
   "name": "@writetome51/batch-to-page-translator",
-  "version": "1.0.0",
-  "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be stored in memory one batch at-a-time",
+  "version": "0.0.1",
+  "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be stored in memory one batch at-a-time. Figures out what pages belong in what batch",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,12 +12,11 @@
     "url": "git+https://github.com/writetome51/batch-to-page-translator.git"
   },
   "keywords": [
-    "array",
-    "display",
     "data",
     "app",
     "batch",
-    "paginator",
+    "page",
+    "translate",
     "pagination",
     "typescript",
     "class"
