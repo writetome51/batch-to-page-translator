@@ -30,7 +30,7 @@
   "devDependencies": {
     "@writetome51/arrays-match": "~1.0.6",
     "@writetome51/pagination-page-info": "~0.0.1",
-    "@writetome51/pagination-batch-info": "~0.0.1"
+    "@writetome51/pagination-batch-info": "~1.0.0"
   },
   "dependencies": {
     "@writetome51/base-class": "~1.0.0",
