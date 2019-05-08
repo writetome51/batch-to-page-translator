@@ -12,6 +12,7 @@ import { BaseClass } from '@writetome51/base-class';
 
 export declare class BatchToPageTranslator extends BaseClass {
 
+
 	private __pageInfo;
 	private __batchInfo;
 
@@ -37,5 +38,4 @@ export declare class BatchToPageTranslator extends BaseClass {
 
 
 	getPageNumberInCurrentBatchFromAbsolutePage(pageNumber: number): number;
-
 }
