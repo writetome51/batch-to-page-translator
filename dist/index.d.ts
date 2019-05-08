@@ -1,6 +1,3 @@
-import { BaseClass } from '@writetome51/base-class';
-
-
 /********************
  This class is intended to help a separate Paginator class paginate data that can only be stored
  in memory one batch at-a-time, because each batch is taken from a much bigger data set that can't
@@ -10,7 +7,7 @@ import { BaseClass } from '@writetome51/base-class';
  class' job to figure out which batch page 10 is in and tell the Paginator what page to show.
  *******************/
 
-export declare class BatchToPageTranslator extends BaseClass {
+export declare class BatchToPageTranslator {
 
 
 	private __pageInfo;
@@ -38,4 +35,5 @@ export declare class BatchToPageTranslator extends BaseClass {
 
 
 	getPageNumberInCurrentBatchFromAbsolutePage(pageNumber: number): number;
+
 }

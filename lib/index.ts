@@ -1,4 +1,3 @@
-import { BaseClass } from '@writetome51/base-class';
 import { getRoundedUp } from '@writetome51/get-rounded-up-down';
 import { noValue } from '@writetome51/has-value-no-value';
 import { inRange } from '@writetome51/in-range';
@@ -15,14 +14,13 @@ import { not } from '@writetome51/not';
  *******************/
 
 
-export class BatchToPageTranslator extends BaseClass {
+export class BatchToPageTranslator {
 
 
 	constructor(
 		private __pageInfo: { totalPages: number },
 		private __batchInfo: { currentBatchNumber: number, pagesPerBatch: number }
 	) {
-		super();
 	}
 
 

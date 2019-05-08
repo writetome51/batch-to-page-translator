@@ -28,15 +28,15 @@
   },
   "homepage": "https://github.com/writetome51/batch-to-page-translator#readme",
   "devDependencies": {
-    "@writetome51/arrays-match": "~1.0.6"
+    "@writetome51/arrays-match": "~1.0.6",
+    "@writetome51/pagination-page-info": "~0.0.1",
+    "@writetome51/pagination-batch-info": "~0.0.1"
   },
   "dependencies": {
     "@writetome51/base-class": "~1.0.0",
     "@writetome51/get-rounded-up-down": "~1.0.11",
     "@writetome51/in-range": "~1.0.4",
     "@writetome51/not": "~1.0.5",
-    "@writetome51/has-value-no-value": "~1.0.2",
-    "@writetome51/pagination-page-info": "~0.0.1",
-    "@writetome51/pagination-batch-info": "~0.0.1"
+    "@writetome51/has-value-no-value": "~1.0.2"
   }
 }

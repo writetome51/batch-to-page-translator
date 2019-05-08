@@ -1,19 +1,5 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_class_1 = require("@writetome51/base-class");
 var get_rounded_up_down_1 = require("@writetome51/get-rounded-up-down");
 var has_value_no_value_1 = require("@writetome51/has-value-no-value");
 var in_range_1 = require("@writetome51/in-range");
@@ -26,13 +12,10 @@ var not_1 = require("@writetome51/not");
  An example: if the user is clicking thru pagination controls and clicks to page 10, it's this
  class' job to figure out which batch page 10 is in and tell the Paginator what page to show.
  *******************/
-var BatchToPageTranslator = /** @class */ (function (_super) {
-    __extends(BatchToPageTranslator, _super);
+var BatchToPageTranslator = /** @class */ (function () {
     function BatchToPageTranslator(__pageInfo, __batchInfo) {
-        var _this = _super.call(this) || this;
-        _this.__pageInfo = __pageInfo;
-        _this.__batchInfo = __batchInfo;
-        return _this;
+        this.__pageInfo = __pageInfo;
+        this.__batchInfo = __batchInfo;
     }
     BatchToPageTranslator.prototype.set_currentBatchNumber_toBatchContainingPage = function (pageNumber) {
         this.__batchInfo.currentBatchNumber = this.getBatchNumberContainingPage(pageNumber);
@@ -61,5 +44,5 @@ var BatchToPageTranslator = /** @class */ (function (_super) {
             - ((this.__batchInfo.currentBatchNumber - 1) * this.__batchInfo.pagesPerBatch));
     };
     return BatchToPageTranslator;
-}(base_class_1.BaseClass));
+}());
 exports.BatchToPageTranslator = BatchToPageTranslator;
