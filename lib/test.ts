@@ -17,8 +17,11 @@ let bch2pgTranslator = new BatchToPageTranslator(pageInfo, batchInfo);
 batchInfo.itemsPerBatch = 10;
 
 
-// Start by testing the method getBatchNumberContainingPage():
+// test the method getBatchNumberContainingPage():
 
+// total batches === 5
+// total pages === 5
+// pages per batch === 1
 
 // Make sure the minimum value gets correct result:
 let batchNumber = bch2pgTranslator.getBatchNumberContainingPage(1);
@@ -66,6 +69,9 @@ else console.log('test 5 FAILED');
 dataSource.dataTotal = 1021;
 pageInfo.itemsPerPage = 13;
 batchInfo.itemsPerBatch = 26;
+// total batches === (1021/26 rounded up = 40)
+// total pages === (1021/13 rounded up = 79)
+// pages per batch === (79/40 rounded up = 2)
 
 // Make sure the minimum value gets correct result:
 batchNumber = bch2pgTranslator.getBatchNumberContainingPage(1);

@@ -1,2 +1,4 @@
 lib/
 .idea/
+dist/test.d.ts
+dist/test.js

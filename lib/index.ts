@@ -30,6 +30,9 @@ export class BatchToPageTranslator {
 
 
 	getBatchNumberContainingPage(pageNumber): number {
+		if (this.__pageInfo.totalPages < 1) throw new Error(
+			'There is no batch to get because the total number of pages is 0'
+		);
 
 		if (not(inRange([1, this.__pageInfo.totalPages], pageNumber))) {
 			throw new Error('The requested page does not exist.');

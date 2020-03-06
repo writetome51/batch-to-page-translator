@@ -1,21 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var pagination_page_info_1 = require("@writetome51/pagination-page-info");
-var pagination_batch_info_1 = require("@writetome51/pagination-batch-info");
-var index_1 = require("./index");
+const pagination_page_info_1 = require("@writetome51/pagination-page-info");
+const pagination_batch_info_1 = require("@writetome51/pagination-batch-info");
+const index_1 = require("./index");
 // Setup dependencies of PaginationPageInfo:
-var dataSource = { dataTotal: 50 };
-var batchPaginator = { itemsPerPage: 10 };
-var pageInfo = new pagination_page_info_1.PaginationPageInfo(dataSource, batchPaginator);
+let dataSource = { dataTotal: 50 };
+let batchPaginator = { itemsPerPage: 10 };
+let pageInfo = new pagination_page_info_1.PaginationPageInfo(dataSource, batchPaginator);
 // Pass PaginationPageInfo into PaginationBatchInfo:
-var batchInfo = new pagination_batch_info_1.PaginationBatchInfo(pageInfo);
+let batchInfo = new pagination_batch_info_1.PaginationBatchInfo(pageInfo);
 // Create BatchToPageTranslator test instance:
-var bch2pgTranslator = new index_1.BatchToPageTranslator(pageInfo, batchInfo);
+let bch2pgTranslator = new index_1.BatchToPageTranslator(pageInfo, batchInfo);
 // batchInfo.itemsPerBatch must be set before doing anything else:
 batchInfo.itemsPerBatch = 10;
-// Start by testing the method getBatchNumberContainingPage():
+// test the method getBatchNumberContainingPage():
+// total batches === 5
+// total pages === 5
+// pages per batch === 1
 // Make sure the minimum value gets correct result:
-var batchNumber = bch2pgTranslator.getBatchNumberContainingPage(1);
+let batchNumber = bch2pgTranslator.getBatchNumberContainingPage(1);
 if (batchNumber === 1)
     console.log('test 1 passed');
 else
@@ -27,7 +30,7 @@ if (batchNumber === 5)
 else
     console.log('test 2 FAILED');
 // Make sure 1 below minimum value triggers error.
-var errorTriggered = false;
+let errorTriggered = false;
 try {
     batchNumber = bch2pgTranslator.getBatchNumberContainingPage(0);
 }
@@ -66,6 +69,9 @@ else
 dataSource.dataTotal = 1021;
 pageInfo.itemsPerPage = 13;
 batchInfo.itemsPerBatch = 26;
+// total batches === (1021/26 rounded up = 40)
+// total pages === (1021/13 rounded up = 79)
+// pages per batch === (79/40 rounded up = 2)
 // Make sure the minimum value gets correct result:
 batchNumber = bch2pgTranslator.getBatchNumberContainingPage(1);
 if (batchNumber === 1)
@@ -155,7 +161,7 @@ if (errorTriggered)
 else
     console.log('test 17 FAILED');
 bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(1);
-var pageNum = bch2pgTranslator.getPageNumberInCurrentBatchFromAbsolutePage(1);
+let pageNum = bch2pgTranslator.getPageNumberInCurrentBatchFromAbsolutePage(1);
 if (pageNum === 1)
     console.log('test 18 passed');
 else
