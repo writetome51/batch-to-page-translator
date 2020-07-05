@@ -1,12 +1,11 @@
-# BatchToPageTranslator
+# LoadToPageTranslator
 
-A TypeScript/JavaScript class intended to help a separate Paginator class paginate  
-data that can only be stored in memory one batch at-a-time, because each batch is  
-taken from a much bigger data set that can't be completely fetched all at once.   
-A batch is defined as the amount of data the Paginator can handle at once.
+A TypeScript/JavaScript class intended to help a separate Paginator class  
+paginate data that can't all be stored in memory at once.  A load is the total  
+amount of data the app can store in memory at once.
 
 An example: if the user is clicking thru pagination controls and clicks to page 10,  
-it's this class' job to figure out which batch page 10 is in and tell the Paginator  
+it's this class' job to figure out which load page 10 is in and tell the Paginator  
 what page to show.
 
 ## Constructor
@@ -15,13 +14,12 @@ what page to show.
 
 ```ts
 constructor(
-    pageInfo: {
-        totalPages: number;
+    __pageInfo: {
+        getTotalPages: () => number;
     },
-    
-    batchInfo: {
-        currentBatchNumber: number;
-        pagesPerBatch: number;
+    __loadInfo: {
+        getCurrentLoadNumber: () => number;
+        getPagesPerLoad: () => number;
     }
 )
 ```
@@ -33,21 +31,14 @@ constructor(
 <summary>view methods</summary>
 
 ```ts
-set_currentBatchNumber_toBatchContainingPage(pageNumber): void
-    // Figures out the batch number that contains pageNumber, and
-    // assigns it to `batchInfo.currentBatchNumber` (from the constructor).
+loadContainsPage(pageNumber, loadNumber): boolean
 
-currentBatchContainsPage(pageNumber): boolean
-    // Useful if you need to find out if the batch containing pageNumber 
-    // is already `batchInfo.currentBatchNumber`.
+getLoadNumberOfPage(pageNumber): number
 
-getBatchNumberContainingPage(pageNumber): number
-
-getPageNumberInCurrentBatchFromAbsolutePage(pageNumber): number
-    // Takes pageNumber and translates it into a page of the current batch.
-    // Example: say `batchInfo.pagesPerBatch` is 10, `batchInfo.currentBatchNumber` 
-    // is 2, and passed `pageNumber` is 11. That would be page 1 of the current 
-    // batch, so the function returns 1.
+getPageNumberOfLoadFromAbsolutePage(pageNumber): number
+    // Takes `pageNumber` and translates it into a page of the current load.
+    // Example: say pagesPerLoad is 10, the current load is 2, and `pageNumber` 
+    // is 11.  That would be page 1 of load 2, so the function returns 1.
 ```
 </details>
 
@@ -57,17 +48,17 @@ getPageNumberInCurrentBatchFromAbsolutePage(pageNumber): number
 You must have npm installed first.  Then, in the command line:
 
 ```bash
-npm install @writetome51/batch-to-page-translator
+npm i @writetome51/load-to-page-translator
 ```
 
 ## Loading
 
 ```ts
 // If using TypeScript:
-import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
+import { LoadToPageTranslator } from '@writetome51/load-to-page-translator';
 // If using ES5 JavaScript:
-var BatchToPageTranslator = 
-    require('@writetome51/batch-to-page-translator').BatchToPageTranslator;
+var LoadToPageTranslator = 
+    require('@writetome51/load-to-page-translator').LoadToPageTranslator;
 ```   
 
 

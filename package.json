@@ -1,7 +1,7 @@
 {
-  "name": "@writetome51/batch-to-page-translator",
-  "version": "1.0.0",
-  "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can only be stored in memory one batch at-a-time. Figures out what pages belong in what batch",
+  "name": "@writetome51/load-to-page-translator",
+  "version": "0.0.1",
+  "description": "TypeScript/JavaScript class intended to help a separate Paginator class paginate data that can't all be stored in memory at once. Figures out what pages belong in what load",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/writetome51/batch-to-page-translator.git"
+    "url": "git+https://github.com/writetome51/load-to-page-translator.git"
   },
   "keywords": [
     "data",
     "app",
-    "batch",
+    "load",
     "page",
     "translate",
     "pagination",
@@ -24,12 +24,12 @@
   "author": "Steve Thompson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/writetome51/batch-to-page-translator/issues"
+    "url": "https://github.com/writetome51/load-to-page-translator/issues"
   },
-  "homepage": "https://github.com/writetome51/batch-to-page-translator#readme",
+  "homepage": "https://github.com/writetome51/load-to-page-translator#readme",
   "devDependencies": {
     "@writetome51/pagination-page-info": "^0.0.1",
-    "@writetome51/pagination-batch-info": "^1.0.0"
+    "@writetome51/pagination-load-info": "^1.0.0"
   },
   "dependencies": {
     "@writetome51/get-rounded-up-down": "^1.0.11",
